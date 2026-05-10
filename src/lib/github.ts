@@ -57,6 +57,53 @@ export interface GhRepo {
   topics: string[];
 }
 
+/**
+ * GitHub Events API returns a heterogeneous list — PushEvent, PullRequestEvent,
+ * CreateEvent, etc. We type only the fields we render and discriminate on
+ * `type`. Extending this is a one-line union edit.
+ *
+ * Docs: https://docs.github.com/en/rest/activity/events
+ */
+export interface GhCommit {
+  sha: string;
+  message: string;
+  url: string;
+}
+
+interface GhEventBase {
+  id: string;
+  created_at: string;
+  repo: { id: number; name: string; url: string };
+}
+
+export interface GhPushEvent extends GhEventBase {
+  type: "PushEvent";
+  payload: {
+    ref: string;
+    // Some PushEvents in the public feed omit these (force-pushes,
+    // anonymized events) — keep them optional so the renderer guards.
+    size?: number;
+    distinct_size?: number;
+    commits?: GhCommit[];
+  };
+}
+
+export interface GhPullRequestEvent extends GhEventBase {
+  type: "PullRequestEvent";
+  payload: {
+    action: string;
+    pull_request: { number: number; title: string; html_url: string };
+  };
+}
+
+export interface GhCreateEvent extends GhEventBase {
+  type: "CreateEvent";
+  payload: { ref_type: "repository" | "branch" | "tag"; ref: string | null };
+}
+
+// Discriminated union: switching on `event.type` narrows to the right shape.
+export type GhEvent = GhPushEvent | GhPullRequestEvent | GhCreateEvent;
+
 // ── Internal helpers ────────────────────────────────────────────────────────
 
 /**
@@ -144,4 +191,50 @@ export function topRepos(repos: GhRepo[], n: number = 6): GhRepo[] {
       return Date.parse(b.pushed_at) - Date.parse(a.pushed_at);
     })
     .slice(0, n);
+}
+
+/**
+ * Fetch a user's PUBLIC events feed (pushes, PRs, branch creates, etc.)
+ * Same signal as GitHub's homepage activity stream.
+ *
+ * Caches at the same `revalidate` cadence as the other helpers so a single
+ * page render only ever triggers one background refetch per hour.
+ *
+ * Returns `[]` on failure so the UI can render an empty fallback instead
+ * of crashing.
+ */
+export async function fetchGhEvents(
+  username: string,
+  perPage: number = 30,
+): Promise<GhEvent[]> {
+  try {
+    const url =
+      `https://api.github.com/users/${username}/events/public` +
+      `?per_page=${perPage}`;
+    const res = await fetch(url, {
+      headers: ghHeaders(),
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+    if (!res.ok) return [];
+    // Cast through `unknown[]` then filter to our typed union — anything we
+    // don't model is dropped silently rather than rendered.
+    const all = (await res.json()) as Array<GhEvent | { type: string }>;
+    return all.filter(
+      (e): e is GhEvent =>
+        e.type === "PushEvent" ||
+        e.type === "PullRequestEvent" ||
+        e.type === "CreateEvent",
+    );
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Filter to PushEvent only and trim to N. Useful for a "recent commits"
+ * style feed — discriminated union narrows each entry to PushEvent so
+ * `e.payload.commits` is fully typed downstream.
+ */
+export function pushEvents(events: GhEvent[], n: number = 10): GhPushEvent[] {
+  return events.filter((e): e is GhPushEvent => e.type === "PushEvent").slice(0, n);
 }

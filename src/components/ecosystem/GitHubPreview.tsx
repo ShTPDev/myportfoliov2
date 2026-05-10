@@ -1,130 +1,145 @@
 /**
- * GitHubPreview — server-side rendered profile + top repos panel.
+ * GitHubPreview — server-side rendered profile + recent push feed.
+ *
+ * Shows live activity (commit pushes across repos) instead of a static
+ * "top repos" grid. This is the same signal GitHub's homepage shows: what
+ * the developer is *currently* working on.
  *
  * Why a Server Component?
  *   - Token (if any) stays on the server.
- *   - Fetched data is embedded in the HTML — zero client JS for the data
- *     layer, search engines see the content, no loading spinner.
- *   - Next caches the GitHub response for 1 hour (see lib/github.ts), so
- *     repeated requests don't hammer the API.
- *
- * Async Server Components:
- *   This function is `async` — that's only legal in Server Components.
- *   Next awaits the fetch before rendering the HTML.
- *   Docs: node_modules/next/dist/docs/01-app/01-getting-started/06-fetching-data.md
+ *   - Fetched data is embedded in the HTML — zero client JS for data, SEO
+ *     sees the content, no loading spinner.
+ *   - Next caches the GitHub response for 1 hour (see lib/github.ts).
  *
  * Concept showcase:
- *  - **`async` component** — only valid in Server Components.
- *  - **Promise.all parallelization** — kick off both fetches together
- *    instead of serially, halving wall-clock time.
- *  - **Graceful fallback** — if GitHub is down or rate-limits us, we render
- *    a small "view on github.com" card instead of crashing the page.
- *  - **`next/image` with remote hostname** — see `next.config.ts`; we
- *    allowlist `avatars.githubusercontent.com` so Next can optimize it.
+ *  - **`async` Server Component** — only legal in RSCs.
+ *  - **`Promise.all` parallelization** — kick off both fetches together.
+ *  - **Discriminated-union narrowing** — `pushEvents()` returns only
+ *    `GhPushEvent`, so `event.payload.commits` is fully typed below.
+ *  - **Relative time formatting** — small helper avoids pulling in
+ *    `date-fns` / `dayjs` for one use site.
+ *  - **Graceful fallback** — if GitHub is down/rate-limited, render a
+ *    "view on github.com" card instead of crashing the page.
  */
 
 import Image from "next/image";
 import {
-  fetchGhRepos,
+  fetchGhEvents,
   fetchGhUser,
-  topRepos,
-  type GhRepo,
+  pushEvents,
+  type GhPushEvent,
 } from "@/lib/github";
 import { Section } from "@/components/ui/Section";
 import { SOCIALS } from "@/lib/constants";
-import { ExternalLink, Star, GitFork } from "lucide-react";
+import { ExternalLink, GitCommit } from "lucide-react";
 
 // Hard-coded handle — same one in lib/constants.SOCIALS.github.
 const GH_USERNAME = "ShTPDev";
 
-// Tailwind classes for common GitHub languages so each repo card carries
-// a tiny colored dot. Falls back to a neutral white when language is
-// missing or unknown — a Record provides type-safety on the keys we set.
-const LANG_DOT: Record<string, string> = {
-  TypeScript: "bg-[#3178c6]",
-  JavaScript: "bg-[#f1e05a]",
-  Dart: "bg-[#00B4AB]",
-  Python: "bg-[#3572A5]",
-  Go: "bg-[#00ADD8]",
-  Rust: "bg-[#dea584]",
-  HTML: "bg-[#e34c26]",
-  CSS: "bg-[#563d7c]",
-  Shell: "bg-[#89e051]",
-  C: "bg-[#555555]",
-  "C++": "bg-[#f34b7d]",
-  Java: "bg-[#b07219]",
-  PHP: "bg-[#4F5D95]",
-  Kotlin: "bg-[#A97BFF]",
-  Swift: "bg-[#F05138]",
-};
+// ── Helpers ────────────────────────────────────────────────────────────────
 
-function langDotClass(lang: string | null): string {
-  if (!lang) return "bg-white/40";
-  return LANG_DOT[lang] ?? "bg-white/40";
+/** Branch name from a `refs/heads/<branch>` ref string. */
+function branchOf(ref: string): string {
+  return ref.replace(/^refs\/heads\//, "");
 }
 
-// ── Repo card ───────────────────────────────────────────────────────────────
-// Pure presentational — no animation here so the parent's <Reveal> can
-// drive the cascade. Stays a server component (no `"use client"`).
-function RepoCard({ repo }: { repo: GhRepo }) {
+/**
+ * "5m", "2h", "3d" relative-time formatter. Cheap stand-in for date-fns;
+ * good enough for a feed where exact times don't matter.
+ */
+function timeAgo(iso: string): string {
+  const sec = Math.max(0, (Date.now() - Date.parse(iso)) / 1000);
+  if (sec < 60) return `${Math.floor(sec)}s`;
+  if (sec < 3600) return `${Math.floor(sec / 60)}m`;
+  if (sec < 86400) return `${Math.floor(sec / 3600)}h`;
+  if (sec < 604800) return `${Math.floor(sec / 86400)}d`;
+  if (sec < 2592000) return `${Math.floor(sec / 604800)}w`;
+  return `${Math.floor(sec / 2592000)}mo`;
+}
+
+/** First line of a commit message — GitHub renders this as the subject. */
+function commitSubject(message: string): string {
+  return message.split("\n")[0];
+}
+
+// ── Push card ───────────────────────────────────────────────────────────────
+// One PushEvent → one card. Lists up to 3 commit subjects (GitHub itself
+// truncates the events feed at ~20 commits per push).
+function PushCard({ event }: { event: GhPushEvent }) {
+  const repoName = event.repo.name; // "owner/repo"
+  const repoUrl = `https://github.com/${repoName}`;
+  const branch = branchOf(event.payload.ref);
+  // Some PushEvents arrive without a `commits` array (force-pushes or
+  // anonymized events). Default to [] so `.slice` doesn't throw.
+  const allCommits = event.payload.commits ?? [];
+  const commits = allCommits.slice(0, 3);
+  const distinctSize = event.payload.distinct_size ?? allCommits.length;
+  const extra = distinctSize - commits.length;
+
   return (
-    <a
-      href={repo.html_url}
-      target="_blank"
-      rel="noreferrer"
-      className="glass group flex h-full flex-col rounded-xl p-4 transition hover:-translate-y-0.5 hover:bg-white/10"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="truncate text-sm font-semibold text-foreground">
-          {repo.name}
-        </h3>
-        <ExternalLink
-          aria-hidden
-          className="h-3.5 w-3.5 shrink-0 text-foreground-muted transition group-hover:text-accent-cyan"
-        />
-      </div>
+    <article className="glass flex flex-col gap-3 rounded-xl p-4 transition hover:bg-white/10">
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="truncate text-sm font-semibold text-foreground transition hover:text-accent-cyan"
+          >
+            {repoName}
+          </a>
+          <div className="mt-0.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-foreground-muted">
+            <GitCommit aria-hidden className="h-3 w-3" />
+            <span>
+              pushed to <span className="text-accent-cyan">{branch}</span>
+            </span>
+            <span>·</span>
+            <span>
+              {distinctSize} commit{distinctSize === 1 ? "" : "s"}
+            </span>
+          </div>
+        </div>
+        <span className="shrink-0 font-mono text-[10px] text-foreground-muted">
+          {timeAgo(event.created_at)}
+        </span>
+      </header>
 
-      {repo.description && (
-        <p className="mt-1.5 line-clamp-2 text-xs text-foreground-muted">
-          {repo.description}
-        </p>
-      )}
-
-      <div className="mt-auto flex items-center gap-3 pt-3 text-[11px] text-foreground-muted">
-        {repo.language && (
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className={`inline-block h-2 w-2 rounded-full ${langDotClass(
-                repo.language,
-              )}`}
-            />
-            {repo.language}
-          </span>
+      {/* Commit list — links to each commit on github.com via SHA. */}
+      <ul className="space-y-1.5 border-l border-white/10 pl-3">
+        {commits.map((c) => (
+          <li
+            key={c.sha}
+            className="flex items-baseline gap-2 text-xs text-foreground-muted"
+          >
+            <a
+              href={`${repoUrl}/commit/${c.sha}`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[10px] text-accent-cyan hover:underline"
+            >
+              {c.sha.slice(0, 7)}
+            </a>
+            <span className="line-clamp-1 text-foreground/90">
+              {commitSubject(c.message)}
+            </span>
+          </li>
+        ))}
+        {extra > 0 && (
+          <li className="font-mono text-[10px] text-foreground-muted/80">
+            + {extra} more
+          </li>
         )}
-        {repo.stargazers_count > 0 && (
-          <span className="inline-flex items-center gap-1">
-            <Star aria-hidden className="h-3 w-3" />
-            {repo.stargazers_count}
-          </span>
-        )}
-        {repo.forks_count > 0 && (
-          <span className="inline-flex items-center gap-1">
-            <GitFork aria-hidden className="h-3 w-3" />
-            {repo.forks_count}
-          </span>
-        )}
-      </div>
-    </a>
+      </ul>
+    </article>
   );
 }
 
 // ── Main section ────────────────────────────────────────────────────────────
 export async function GitHubPreview() {
-  // Run both fetches in parallel — Promise.all halves wall-clock time vs.
-  // awaiting each separately.
-  const [user, repos] = await Promise.all([
+  // Run both fetches in parallel — Promise.all halves wall-clock time.
+  const [user, events] = await Promise.all([
     fetchGhUser(GH_USERNAME),
-    fetchGhRepos(GH_USERNAME, { sort: "pushed", perPage: 24 }),
+    fetchGhEvents(GH_USERNAME, 50),
   ]);
 
   // Fallback when GitHub is unreachable / rate-limited / token missing.
@@ -149,14 +164,14 @@ export async function GitHubPreview() {
     );
   }
 
-  const featured = topRepos(repos, 6);
+  const pushes = pushEvents(events, 8);
 
   return (
     <Section
       id="github"
       eyebrow="Open source"
-      title="Live from GitHub."
-      description="Pulled directly from the GitHub API — refreshes hourly. Click any repo to open it on github.com."
+      title="Live activity from GitHub."
+      description="Recent pushes pulled directly from the GitHub Events API — refreshes hourly. Click any commit SHA to inspect it."
     >
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {/* ── Profile card (spans 1 column) ──────────────────────────── */}
@@ -169,7 +184,6 @@ export async function GitHubPreview() {
               width={64}
               height={64}
               className="rounded-full ring-1 ring-white/10"
-              // Avatar is decorative + above-the-fold; let it lazy-load is fine.
             />
             <div className="min-w-0">
               <div className="truncate text-base font-semibold text-foreground">
@@ -230,16 +244,16 @@ export async function GitHubPreview() {
           </a>
         </div>
 
-        {/* ── Repos grid (spans 2 columns on lg+) ────────────────────── */}
+        {/* ── Push feed (spans 2 columns on lg+) ─────────────────────── */}
         <div className="lg:col-span-2">
-          {featured.length === 0 ? (
+          {pushes.length === 0 ? (
             <p className="glass rounded-2xl p-6 text-sm text-foreground-muted">
-              No public repos to feature yet.
+              No recent pushes in the public events feed.
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {featured.map((repo) => (
-                <RepoCard key={repo.id} repo={repo} />
+              {pushes.map((event) => (
+                <PushCard key={event.id} event={event} />
               ))}
             </div>
           )}
