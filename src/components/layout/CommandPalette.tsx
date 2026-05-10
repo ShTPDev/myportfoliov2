@@ -243,6 +243,15 @@ const ACTIONS: ReadonlyArray<Action> = [
     type: "link",
     href: "/about-me#cv",
   },
+  {
+    id: "boledo-demo",
+    label: "View Boledo v2 demo (BGLL)",
+    hint: "/about-me#demo",
+    keywords: ["boledo", "demo", "apk", "bgll", "lottery", "android"],
+    icon: Download,
+    type: "link",
+    href: "/about-me#demo",
+  },
 ];
 
 export function CommandPalette() {

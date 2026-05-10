@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Boledo App v2 — Demo Build for BGLL</title>
+<style>
+  :root {
+    --navy: #1B3A5C;
+    --navy-deep: #142B45;
+    --red: #C0392B;
+    --gold: #D4A949;
+    --ink: #1A1A2E;
+    --muted: #5A6373;
+    --line: #D8DEE5;
+    --bg-soft: #F4F6FA;
+    --green: #2D7D5A;
+  }
+
+  @page { size: letter; margin: 0; }
+  @media print {
+    body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .page { page-break-after: always; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+    html, body { background: white; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #E2E5EA; }
+  body {
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    background: white;
+    margin: 0.25in auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  /* Header band */
+  .head {
+    background: linear-gradient(120deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: white;
+    padding: 0.42in 0.65in 0.35in;
+    position: relative;
+  }
+  .head::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 5pt;
+    background: linear-gradient(90deg, var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+  }
+  .head-title {
+    font-size: 22pt;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    margin-bottom: 4pt;
+  }
+  .head-sub {
+    font-size: 10pt;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .head-meta {
+    font-size: 9pt;
+    color: #C8D8E8;
+    margin-top: 8pt;
+    line-height: 1.5;
+  }
+  .head-meta strong { color: white; }
+
+  /* Body */
+  .body {
+    padding: 0.32in 0.65in 0.35in;
+  }
+
+  section { margin-top: 14pt; }
+  section:first-child { margin-top: 8pt; }
+
+  h2.sec {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    border-bottom: 1.5px solid var(--red);
+    padding-bottom: 3pt;
+    margin-bottom: 9pt;
+  }
+
+  p {
+    font-size: 10.2pt;
+    line-height: 1.6;
+    margin-bottom: 9pt;
+  }
+  p strong { color: var(--navy); font-weight: 700; }
+
+  .lead {
+    font-size: 10.5pt;
+    line-height: 1.6;
+    background: var(--bg-soft);
+    padding: 11pt 14pt;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4pt 4pt 0;
+  }
+
+  /* Compare grid */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    margin: 6pt 0;
+  }
+  .col {
+    border-radius: 4pt;
+    padding: 11pt 13pt;
+  }
+  .col-old {
+    background: #FBE9E7;
+    border: 1px solid #E5B7B0;
+  }
+  .col-new {
+    background: #E8F5EE;
+    border: 1px solid #B5D9C3;
+  }
+  .col h3 {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 7pt;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.85;
+  }
+  .col-old h3 { color: var(--red); }
+  .col-new h3 { color: var(--green); }
+  .col ul { list-style: none; }
+  .col li {
+    font-size: 9pt;
+    line-height: 1.5;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .col-old li::before {
+    content: '✕';
+    position: absolute; left: 0; top: 0;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .col-new li::before {
+    content: '✓';
+    position: absolute; left: 0; top: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* Install steps */
+  .steps {
+    counter-reset: step;
+  }
+  .step {
+    counter-increment: step;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--navy);
+    padding: 10pt 12pt 10pt 38pt;
+    margin-bottom: 7pt;
+    position: relative;
+    border-radius: 0 3pt 3pt 0;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+  .step::before {
+    content: counter(step);
+    position: absolute;
+    left: 9pt; top: 9pt;
+    width: 20pt; height: 20pt;
+    background: var(--navy);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20pt;
+    font-size: 10.5pt;
+    font-weight: 700;
+  }
+  .step strong { color: var(--navy); }
+  .step .step-title {
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2pt;
+    font-size: 10.5pt;
+  }
+
+  /* Credentials box */
+  .creds {
+    background: linear-gradient(135deg, #FAF6EC 0%, #F4ECD4 100%);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4pt 4pt 0;
+    padding: 12pt 16pt;
+    font-size: 10pt;
+    line-height: 1.65;
+  }
+  .creds h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8pt;
+  }
+  .creds .row {
+    display: flex;
+    gap: 10pt;
+    margin-bottom: 4pt;
+    align-items: center;
+  }
+  .creds .lbl {
+    flex: 0 0 1.3in;
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 10pt;
+  }
+  .creds code {
+    background: white;
+    padding: 2pt 8pt;
+    border: 1px solid var(--line);
+    border-radius: 2pt;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 10pt;
+    color: var(--ink);
+  }
+
+  /* Bullets */
+  ul.b { list-style: none; }
+  ul.b li {
+    font-size: 10pt;
+    line-height: 1.55;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 5pt;
+  }
+  ul.b li::before {
+    content: '';
+    position: absolute; left: 2pt; top: 7pt;
+    width: 4pt; height: 4pt;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  ul.b li strong { color: var(--navy); font-weight: 700; }
+
+  /* Footer */
+  .foot {
+    margin-top: 18pt;
+    padding-top: 10pt;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 9pt;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .foot strong { color: var(--navy); font-style: normal; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="head">
+    <div class="head-title">Boledo App v2 — Demo Build</div>
+    <div class="head-sub">Submitted with my IT Manager Application · Belize Government Lotteries Ltd.</div>
+    <div class="head-meta">
+      <strong>By:</strong> Shamar T. Patnett &nbsp;·&nbsp;
+      <strong>Built:</strong> April 27 → May 10, 2026  (13 days) &nbsp;·&nbsp;
+      <strong>Platform:</strong> Android phone or tablet
+    </div>
+  </div>
+
+  <div class="body">
+
+    <section>
+      <p class="lead">
+        Hello, and thank you for taking the time to review my application. Rather than only describe how I would improve the current Fi We Boledo app, I built a working demo so you can see and feel the difference for yourself. <strong>I built this demo in 13 days</strong> — from the day I first saw the IT Manager posting (April 27) to the day I submitted my application (May 10). The short timeline is part of the point: it shows the kind of focus, speed, and ownership I would bring to BGLL on day one. <strong>This is a real, installable Android app — no setup or technical knowledge required.</strong> Just install it on your phone and open it like any other app.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="sec">What This Demo Shows</h2>
+      <p>
+        The current Fi We Boledo app is a great first step into a digital lottery experience. The demo I built shows what a next version of that app could look and feel like — with stronger security, a friendlier user experience, and the ability to <strong>buy tickets directly with a Belizean debit or credit card through Belize Bank</strong>, alongside the existing DigiWallet option.
+      </p>
+
+      <div class="compare">
+        <div class="col col-old">
+          <h3>Current Fi We Boledo App</h3>
+          <ul>
+            <li>Customers can only pay using DigiWallet</li>
+            <li>No fingerprint or face login</li>
+            <li>Bank account numbers shown fully on screen</li>
+            <li>The three game-purchase screens look identical</li>
+            <li>Empty Tickets and Winning Numbers screens feel blank</li>
+            <li>No wallet balance shown on the home screen</li>
+            <li>No countdown to the next draw</li>
+          </ul>
+        </div>
+        <div class="col col-new">
+          <h3>Boledo v2 Demo</h3>
+          <ul>
+            <li>Pay with Belize Bank debit/credit card or DigiWallet</li>
+            <li>Fingerprint and face login supported</li>
+            <li>Bank account numbers safely masked (★★★★0000)</li>
+            <li>Each game has its own visual identity</li>
+            <li>Friendly empty states with images and clear next steps</li>
+            <li>Wallet balance and quick stats on the home screen</li>
+            <li>Live countdown to the next draw</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">How to Install and Open the Demo</h2>
+      <p>
+        The demo is designed to work entirely on your phone — no internet servers, accounts to set up, or technical configuration needed. Five simple steps:
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-title">Open the demo folder</div>
+          Click the link in my cover letter or CV (or scan the QR code on my résumé). It opens a Google Drive folder containing the app.
+        </div>
+        <div class="step">
+          <div class="step-title">Download the file named "app-release.apk"</div>
+          On an Android phone or tablet, tap the file name and choose "Download" — it is about 100 MB and will save to your Downloads folder.
+        </div>
+        <div class="step">
+          <div class="step-title">Allow the install (one-time only)</div>
+          When you tap the downloaded file, Android may ask if it can install apps from this source. Tap "Settings" → enable "Allow from this source" → then tap back. This is normal for any app not yet on the Play Store, and is safe.
+        </div>
+        <div class="step">
+          <div class="step-title">Tap "Install"</div>
+          Android will install the app in a few seconds. Tap "Open" when it finishes, or find "Boledo" in your app drawer like any other app.
+        </div>
+        <div class="step">
+          <div class="step-title">Sign in with the demo account below</div>
+          Use the credentials in the next section to sign in. The app works fully offline — you can navigate the entire experience without an internet connection.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Demo Login</h2>
+      <div class="creds">
+        <h3>Use this account to sign in</h3>
+        <div class="row"><span class="lbl">Email</span><code>demo@boledo-v2.bz</code></div>
+        <div class="row"><span class="lbl">Password</span><code>BGLLDemo2026!</code></div>
+        <div style="margin-top: 9pt; font-size: 9pt; color: var(--muted); font-style: italic; line-height: 1.5;">
+          ▸ This is a demo account only — it is not connected to any real lottery, banking, or payment system. No real money is processed. You can also create a new test account inside the app if you prefer.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Suggested Tour (5 Minutes)</h2>
+      <p>If you have a few minutes, here are the screens that show the biggest differences from the current app:</p>
+      <ul class="b">
+        <li><strong>Sign In screen</strong> — note the password show/hide button, the "Use Fingerprint" option, and the cleaner overall layout.</li>
+        <li><strong>Home screen</strong> — your wallet balance is now visible at the top, the next draw has a live countdown, and each game has its own colour and feel.</li>
+        <li><strong>Buy a Boledo number</strong> — easier number entry, a clear explanation of "Pieces", and a confirmation step before the wager is final.</li>
+        <li><strong>Payment Information screen</strong> — your bank account number is hidden except for the last four digits, and you can add a Belize Bank debit/credit card alongside DigiWallet.</li>
+        <li><strong>My Tickets screen</strong> — friendly illustrations and clear actions when you have not yet purchased a ticket.</li>
+        <li><strong>Winning Numbers</strong> — historical results, a draw archive, and visual emphasis on the latest winning numbers.</li>
+        <li><strong>Profile and Settings</strong> — proper name capitalisation, clearer reasons when a field is locked, and a smoother account-update flow.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="sec">An Honest Note</h2>
+      <p>
+        This is a <strong>demonstration</strong>, not a finished replacement product. A few things — like sending real text-message verification codes, or actually charging a Belize Bank card — are placeholders, because those require live agreements and credentials that only BGLL holds. Everything you see, however, reflects the same design system, security thinking, and engineering quality I use to ship my live M3 Marketplace platform.
+      </p>
+      <p>
+        The goal is simple: <strong>to show direction and capability, not to claim a finished product.</strong> If you would like a deeper walkthrough — including the source code, the admin web panel, or live screen-sharing of the same flows — I would be glad to do that at interview.
+      </p>
+    </section>
+
+    <div class="foot">
+      <strong>Shamar T. Patnett</strong> &nbsp;·&nbsp; +501-625-0795 &nbsp;·&nbsp; Shamarpatnett2000@gmail.com<br>
+      <strong>Boledo v2 Demo</strong> — built specifically for the Belize Government Lotteries Ltd. IT Manager application
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

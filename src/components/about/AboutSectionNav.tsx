@@ -32,13 +32,14 @@ import { useEffect, useState } from "react";
 //
 // `as const` + `typeof` + indexed-access is a common TS idiom to derive
 // a literal-union type from an array of strings. Result:
-//   SectionId = "story" | "values" | "now" | "resume" | "cv" | "contact"
+//   SectionId = "story" | "values" | "now" | "resume" | "cv" | "demo" | "contact"
 const SECTION_IDS = [
   "story",
   "values",
   "now",
   "resume",
   "cv",
+  "demo",
   "contact",
 ] as const;
 type SectionId = (typeof SECTION_IDS)[number];
@@ -49,6 +50,7 @@ const LABELS: Record<SectionId, string> = {
   now: "/now",
   resume: "Resume",
   cv: "CV",
+  demo: "Boledo Demo",
   contact: "Contact",
 };
 

@@ -95,6 +95,8 @@ const DOCS = {
   resumePdf: "/about/resume.pdf",
   cvHtml: "/about/cv.html",
   cvPdf: "/about/cv.pdf",
+  demoHtml: "/about/demo-readme.html",
+  demoPdf: "/about/demo-readme.pdf",
 } as const;
 
 // ─── Values strip data ────────────────────────────────────────────────────
@@ -329,6 +331,42 @@ export default function AboutMePage(): React.JSX.Element {
         downloadName="Shamar_Patnett_IT_Manager_CV"
       >
         <CvNative />
+      </DocSection>
+
+      {/* ── #demo — Boledo v2 demo APK readme ──────────────────────────── */}
+      {/*
+        This is a special section: I built a working Android demo of a next
+        version of BGLL's Fi We Boledo app in 13 days as part of the IT
+        Manager application. The readme HTML walks reviewers through what's
+        different, how to install, and a 5-minute tour. Rendered as an
+        iframe of the original styled HTML so the printable side-by-side
+        comparison stays intact (no need for a separate native renderer).
+      */}
+      <DocSection
+        id="demo"
+        eyebrow="Boledo v2 Demo · BGLL"
+        title="13-day working Android demo."
+        description="A real, installable Android APK I built between April 27 and May 10, 2026 — submitted with my IT Manager application. Bank-card payments, biometric login, masked PII, redesigned game flows. Open the readme for install steps + a side-by-side comparison."
+        htmlSrc={DOCS.demoHtml}
+        pdfSrc={DOCS.demoPdf}
+        downloadName="Boledo_v2_Demo_Readme"
+      >
+        {/*
+          No native render for the demo readme — the original HTML is
+          already self-contained with side-by-side comparison cards and
+          install steps. Embed it directly. Sandbox restricts what the
+          embedded page can do (no top-level navigation), `loading="lazy"`
+          defers the fetch until the user scrolls here.
+        */}
+        <div className="glass overflow-hidden rounded-2xl">
+          <iframe
+            src={DOCS.demoHtml}
+            title="Boledo v2 Demo readme"
+            className="block h-[80vh] w-full border-0 bg-white"
+            sandbox="allow-same-origin allow-popups"
+            loading="lazy"
+          />
+        </div>
       </DocSection>
 
       {/* ── #contact — Closing CTA ─────────────────────────────────────── */}

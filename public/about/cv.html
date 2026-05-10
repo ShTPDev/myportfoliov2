@@ -413,7 +413,9 @@
     </p>
 
     <div class="cover-highlight">
-      <strong>Specific to BGLL's Fi We Boledo App:</strong> the application currently only supports DigiWallet — meaning customers cannot purchase tickets using a local Belizean debit or credit card. <strong>I have already built and shipped a Belize Bank payment integration in production</strong> as part of M3 Marketplace: hosted payment page flow, HMAC-signed webhooks, secure tokenized card storage, and transaction reconciliation. Bringing this same integration into Fi We Boledo and BGLL's backend systems would open ticket purchasing to every Belizean with a bank account — a direct and substantial increase in accessibility, transaction volume, and revenue. This is not theoretical capability; it is something I have already done.
+      <strong>I have built a working demo of the Boledo app for BGLL — in 13 days.</strong> From the moment I saw this posting on April 27 through to this submission on May 10, I designed and built a functioning Android APK on a full Serverpod 3.2.3 + Flutter monorepo (customer app, admin web panel, backend) that demonstrates the security, UX, and payment improvements outlined below. Rather than describe what I would do, I did it. <strong>The demo APK is available in the Drive folder linked in this letter.</strong> The 13-day turnaround is itself part of the proof: it shows the speed of execution and the engineering credibility I would bring to BGLL.
+      <br><br>
+      <strong>On the Belize Bank gap specifically:</strong> the current Fi We Boledo app supports only DigiWallet — meaning customers cannot purchase tickets using a local Belizean debit or credit card. I have already shipped a production Belize Bank payment integration as part of M3 Marketplace: hosted payment page flow, HMAC-signed webhooks, secure tokenized card storage, and transaction reconciliation. Bringing the same integration into Fi We Boledo and BGLL's backend would open ticket purchasing to every Belizean with a bank account — a direct and substantial increase in accessibility, transaction volume, and revenue. <em>This is not theoretical capability; it is something I have already done — and demonstrated in the attached demo.</em>
     </div>
 
     <p>
@@ -454,6 +456,10 @@
           <a href="https://github.com/ShTPDev">github.com/ShTPDev</a>
         </div>
         <div><a href="https://m3m3development.com/">m3m3development.com</a></div>
+        <div style="margin-top: 4pt; padding-top: 4pt; border-top: 1px solid rgba(212,169,73,0.35);">
+          <span style="color: var(--gold); font-weight: 700;">▸ Boledo v2 Demo:</span>
+          <a href="https://drive.google.com/drive/folders/15dmdBzll-MiD-CjPJmnwUL5DHyVI_JVs?usp=sharing" style="color: var(--gold);">View Demo Folder</a>
+        </div>
       </div>
     </div>
   </div>
@@ -577,6 +583,19 @@
 
     <section>
       <h2 class="sec">Notable Projects &amp; Systems Built</h2>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">Boledo App v2 — Demo Build for BGLL</span>
+          <span class="proj-status">13-DAY BUILD · APR 27 → MAY 10, 2026</span>
+        </div>
+        <div class="proj-desc">
+          <strong>Built in 13 days</strong> — from the moment I saw the BGLL IT Manager posting on April 27 through this submission on May 10. A working demo accompanying this application, addressing the security, UX, and payment-integration gaps I identified in the current Fi We Boledo app. The compressed timeline is itself part of the demonstration — proof of execution speed, technical credibility, and self-driven initiative.
+          <strong>Stack:</strong> Serverpod 3.2.3 backend, Flutter monorepo (customer app, admin web panel, generated client), PostgreSQL 16 with pgvector (Docker), Redis, Custom Design System on Material 3, flutter_bloc 9.x, go_router 16.x, Sentry, secure storage, reactive forms.
+          <strong>Admin web</strong> uses pluto_grid, fl_chart + Syncfusion charts, flutter_quill, appflowy_board (Kanban), and PDF generation.
+          <strong>Deliverables:</strong> Android release APK (~104 MB), full source monorepo, and documentation. Available with this submission and ready to demo live at interview.
+        </div>
+      </div>
 
       <div class="proj">
         <div class="proj-head">
