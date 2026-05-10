@@ -29,6 +29,7 @@
 import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { ContactForm } from "@/components/projects/ContactForm";
+import { ResumeButton } from "@/components/layout/ResumeButton";
 import { SITE, SOCIALS } from "@/lib/constants";
 import type { LucideIcon } from "lucide-react";
 
@@ -132,6 +133,15 @@ export default function ContactPage(): React.JSX.Element {
               </div>
             </a>
           ))}
+
+          {/*
+            Résumé download — sits between the contact rows and the social
+            links. `md` size to match the visual weight of the contact rows
+            above it (those are full-width glass cards, not tiny pills).
+          */}
+          <div className="mt-2">
+            <ResumeButton size="md" />
+          </div>
 
           {/*
             Socials sub-row — text links with a small ExternalLink glyph.

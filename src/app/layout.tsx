@@ -16,6 +16,10 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
+// CommandPalette is a client component mounted ONCE here at the root so
+// the ⌘K shortcut works on every page. Mounting per-page would either
+// duplicate listeners or miss routes that forget to include it.
+import { CommandPalette } from "@/components/layout/CommandPalette";
 import { baseMetadata, baseViewport, personJsonLd } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -66,6 +70,12 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          {/*
+            Mounted once for the whole app. The component itself is empty
+            DOM until the user opens it (⌘K, Ctrl+K, or the navbar button),
+            at which point it renders its modal via AnimatePresence.
+          */}
+          <CommandPalette />
         </ThemeProvider>
       </body>
     </html>

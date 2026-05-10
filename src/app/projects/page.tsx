@@ -1,9 +1,10 @@
 /**
- * `/projects` route — deep dive on the four production systems.
+ * `/projects` route — Apple-style scroll-locked case studies.
  *
- * Where the homepage's `EcosystemShowcase` is a compact 2-column grid (a
- * "bento" preview), this page is the long-form case-study version: one
- * project per row, more breathing room, full descriptions front and center.
+ * Where the homepage's `EcosystemShowcase` is a compact 2-column "bento"
+ * preview of the four production systems, this page is the long-form
+ * scroll-storytelling version: one project per tall section, with a
+ * sticky visual on the left and content advancing on the right.
  *
  * Concept showcase:
  *  - **Next.js App Router file-based routing** — placing `page.tsx` under
@@ -14,32 +15,32 @@
  *  - **Server Component by default** — App Router pages are server components
  *    unless they declare `"use client"`. This file has no client directive
  *    and no hooks, so it renders on the server: faster TTFB, no JS shipped
- *    for this code, smaller bundle. The interactive bits (Reveal, TiltCard)
- *    are client components and Next.js stitches the boundary for us.
+ *    for this code, smaller bundle. The interactive bits live inside
+ *    `StickyCaseStudy` (a client component) — Next.js stitches the
+ *    server/client boundary for us automatically.
  *  - **`export const metadata`** — Next.js reads this object and renders the
  *    appropriate `<title>` + meta tags into the page `<head>`. Because the
- *    root layout sets a `template` (`"%s — Shamar T. Patnett"`), the literal
- *    string `"Projects"` here becomes `"Projects — Shamar T. Patnett"` in
- *    the browser tab. Definition lives in `src/lib/seo.ts`.
+ *    root layout sets a title template (`"%s — Shamar T. Patnett"`), the
+ *    literal string `"Projects"` here becomes
+ *    `"Projects — Shamar T. Patnett"` in the browser tab. Definition lives
+ *    in `src/lib/seo.ts`.
  *  - **Reusing data** — we import `ECOSYSTEM` from `@/data/ecosystem` rather
  *    than redefining the projects. One source of truth: edit the data file
  *    and BOTH the homepage and this page update.
- *  - **Alternating Reveal direction** — for visual rhythm we flip slide-in
- *    direction every other row using a ternary on the array index. Even rows
- *    slide from the left, odd rows from the right.
- *  - **Type assertion via parameter list** — the `Direction` literal-union is
- *    enforced by TS so we can't typo "lefft" or similar.
  *
- * Layout:
- *   Section header → vertical stack of CaseStudyCard, each in glass card,
- *   wrapped in TiltCard (subtle 3D tilt, max=3) and Reveal (scroll fade-in).
+ * Layout strategy:
+ *   Page header (Section eyebrow/title/description) → vertical stack of
+ *   `StickyCaseStudy` sections, one per ECOSYSTEM entry. Each is its own
+ *   tall scroll-locked block; CSS `position: sticky` naturally hands off
+ *   from one section to the next as the user scrolls.
+ *
+ * Note: `CaseStudyCard.tsx` is intentionally kept as the smaller card variant
+ * for a future ecosystem grid — not deleted.
  */
 
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/animations/Reveal";
-import { TiltCard } from "@/components/ui/TiltCard";
-import { CaseStudyCard } from "@/components/projects/CaseStudyCard";
+import { StickyCaseStudy } from "@/components/projects/StickyCaseStudy";
 import { ECOSYSTEM } from "@/data/ecosystem";
 
 // `Metadata` is the typed shape Next.js expects. The `title: "Projects"`
@@ -61,40 +62,37 @@ export default function ProjectsPage(): React.JSX.Element {
       description="End-to-end ownership of every system below — from architecture and code through deployment and operations. As the sole IT authority at the Belize Social Investment Fund and the founder of M3M3 Development, each project here is something I designed, built, and put into production myself or alongside a team I led."
     >
       {/*
-        Vertical stack of full-width case studies. `space-y-8` adds an 8-step
-        gap between siblings — equivalent to writing `mt-8` on every child
-        except the first. Cleaner than per-child margins.
-      */}
-      <div className="space-y-8">
-        {ECOSYSTEM.map((entry, i) => {
-          // Alternate slide-in direction for rhythm. Even rows enter from the
-          // left, odd rows from the right. The `as const` style isn't needed
-          // here because Reveal's `direction` prop is already typed —
-          // TypeScript will reject anything outside `"left" | "right" | ...`.
-          const direction = i % 2 === 0 ? "left" : "right";
+        Vertical stack of scroll-locked case studies. Each `StickyCaseStudy`
+        renders its own tall section (200vh on md+), so the user scrolls
+        through them one at a time — the visual on the left pins, the content
+        on the right advances, then the next project takes over the sticky
+        slot.
 
+        `space-y-24` adds generous gap between siblings on md+ — gives the
+        eye a beat between sections so they don't bleed together.
+      */}
+      <div className="space-y-24 md:space-y-40">
+        {ECOSYSTEM.map((entry) => {
+          // ── Server → Client boundary note ──
+          // This page is a Server Component. `StickyCaseStudy` is a Client
+          // Component (it uses Framer Motion hooks). Across that boundary,
+          // React's serialization protocol can only ferry plain data — NOT
+          // functions/components. `entry.icon` IS a component, so we strip
+          // it here using object rest destructuring:
+          //
+          //   const { icon, ...rest } = entry;
+          //
+          // The `_icon` underscore-prefix is a TS convention saying "we know
+          // we're not using this, please don't warn". `serializable` is what
+          // crosses the boundary — fully JSON-friendly. The client component
+          // re-resolves the right icon by `kind` on its side.
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { icon: _icon, ...serializable } = entry;
           return (
-            // `key` must be stable + unique. `entry.kind` works because the
-            // EcosystemKind union is unique-per-entry.
-            <Reveal key={entry.kind} direction={direction} amount={0.15}>
-              {/*
-                TiltCard with `max={3}` gives a much subtler 3D tilt than the
-                homepage cards (which use 4). On big single-column cards a
-                small tilt feels premium; a big tilt feels gimmicky.
-              */}
-              <TiltCard max={3}>
-                {/*
-                  `glass` is a custom utility defined in globals.css — frosted
-                  blur + translucent background + 1px ring. `rounded-2xl`
-                  matches the radius of the homepage cards so the visual
-                  language stays consistent. Larger padding (`p-6 md:p-8`)
-                  because case-study cards are bigger.
-                */}
-                <article className="glass rounded-2xl p-6 md:p-8">
-                  <CaseStudyCard entry={entry} />
-                </article>
-              </TiltCard>
-            </Reveal>
+            // `key` must be stable + unique. `entry.kind` is a literal-union
+            // member ("marketplace" | "betting" | "payments" | "internal")
+            // and every entry has a different one, so it's safe.
+            <StickyCaseStudy key={entry.kind} entry={serializable} />
           );
         })}
       </div>

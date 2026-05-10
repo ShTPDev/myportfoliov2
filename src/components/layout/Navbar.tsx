@@ -1,15 +1,21 @@
 /**
  * Navbar — sticky glass pill at the top of every page.
  *
- * Mostly a Server Component, but it imports <MobileNav /> which is a client
- * component. That's fine — Next stitches the two trees together at the
- * "use client" boundary. Server-rendered HTML for static parts, hydrated
- * JS only for the mobile drawer.
+ * Mostly a Server Component, but it imports two client components:
+ *   - <MobileNav />     — hamburger drawer with state.
+ *   - <PaletteButton /> — small ⌘K trigger; client-only because it
+ *                         dispatches a DOM event when clicked.
+ *
+ * Next stitches server + client trees together at the "use client"
+ * boundary: server-rendered HTML for static parts, hydrated JS only
+ * where needed.
  */
 
 import Link from "next/link";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import { MobileNav } from "./MobileNav";
+import { AvailablePill } from "./AvailablePill";
+import { PaletteButton } from "./PaletteButton";
 
 export function Navbar() {
   return (
@@ -41,6 +47,22 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/*
+            Availability chip — hidden below md to keep the navbar tight
+            on tablet/mobile (the mobile nav still surfaces contact via
+            the drawer). `hidden md:inline-flex` is the Tailwind pattern
+            for "show only at this breakpoint and up".
+          */}
+          <AvailablePill className="hidden md:inline-flex" />
+
+          {/*
+            ⌘K palette trigger. Hidden on small screens because typing
+            ⌘K isn't possible without a keyboard, BUT we still want
+            mobile users to reach the palette — they tap the hamburger
+            and use links, OR we could expose this in MobileNav later.
+          */}
+          <PaletteButton className="hidden sm:inline-flex" />
+
           {/*
             CTA copy reframed for the IT Manager pitch — this isn't a
             freelancer "hire me" pill, it's a hiring-manager-friendly

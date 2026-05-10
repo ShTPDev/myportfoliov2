@@ -5,7 +5,9 @@
  * time (or build time for static pages), so the year is baked into the HTML
  * — no client JS needed.
  *
- * Socials row sourced from the typed `SOCIALS` constant.
+ * Layout: a glass row with copyright + socials + build credits, then a
+ * second row beneath it with deploy info (only renders on Vercel — see
+ * <DeployInfo /> for the env-var gating).
  *
  * Note on icons: lucide-react v1.x removed brand-name icons (Github,
  * Linkedin, etc.) for trademark reasons. We render text labels with a
@@ -19,6 +21,7 @@ import { SITE, SOCIALS } from "@/lib/constants";
 // `lucide-react` is a tree-shakeable icon library — only the icon we use
 // ships in the bundle.
 import { ExternalLink } from "lucide-react";
+import { DeployInfo } from "./DeployInfo";
 
 /**
  * Local type describing one social link. `Readonly<...>` would also work;
@@ -69,6 +72,15 @@ export function Footer() {
         <span className="font-mono text-xs">
           built with Next.js · TypeScript · Tailwind
         </span>
+      </div>
+
+      {/*
+        Third row: deploy info. <DeployInfo /> returns null when the
+        Vercel env vars are absent (e.g. local dev), so this row simply
+        disappears on non-prod builds — no fake info shown.
+      */}
+      <div className="mt-3">
+        <DeployInfo />
       </div>
     </footer>
   );

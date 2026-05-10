@@ -27,6 +27,7 @@ import { HeroBackground } from "./HeroBackground";
 import { FloatingIcons } from "./FloatingIcons";
 import { AnimatedTitle } from "./AnimatedTitle";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { ResumeButton } from "@/components/layout/ResumeButton";
 
 export function Hero() {
   return (
@@ -88,6 +89,11 @@ export function Hero() {
           >
             Get in touch
           </Link>
+          {/*
+            Résumé download — small pill matching the navbar CTA size. Has a
+            keyboard shortcut (`r`) wired up inside the component itself.
+          */}
+          <ResumeButton size="sm" />
         </motion.div>
       </motion.div>
     </section>
