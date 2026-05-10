@@ -10,13 +10,15 @@
  */
 
 import { Hero } from "@/components/hero/Hero";
+import { About } from "@/components/hero/About";
+import { ServicesGrid } from "@/components/ecosystem/ServicesGrid";
 
 export default function Home() {
-  // A React fragment (<>...</>) is shorthand for `<React.Fragment>`. Use when
-  // you need to return multiple elements but don't want an extra wrapper div.
   return (
     <>
       <Hero />
+      <About />
+      <ServicesGrid />
     </>
   );
 }

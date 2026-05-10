@@ -9,6 +9,11 @@
  *  - `export const metadata` is read by Next.js to populate <head>.
  *  - The `children` prop is whatever page/nested layout is currently rendered.
  *
+ * Composition pattern:
+ *  - <ThemeProvider /> is a client component (needs Context + localStorage).
+ *  - We wrap content in it once here so every page gets dark-mode support
+ *    without re-mounting the provider on navigation.
+ *
  * Docs: node_modules/next/dist/docs/01-app/01-getting-started/03-layouts-and-pages.md
  */
 
@@ -16,6 +21,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { baseMetadata } from "@/lib/seo";
 
 // `next/font` self-hosts Google fonts at build time (no FOUT, no extra request).
@@ -48,17 +54,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      // Combine font CSS variables + tailwind helpers via template literal.
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       // Suppresses harmless mismatch warnings when next-themes injects a
       // `class` on <html> client-side after hydration.
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        {/* `flex-1` lets <main> grow to fill the viewport, pushing footer down. */}
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          {/* `flex-1` lets <main> grow to fill the viewport, pushing footer down. */}
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
