@@ -1,3 +1,11 @@
+/**
+ * Footer — appears at the bottom of every page.
+ *
+ * Server Component. `new Date().getFullYear()` runs on the server at request
+ * time (or build time for static pages), so the year is baked into the HTML
+ * — no client JS needed.
+ */
+
 import { SITE } from "@/lib/constants";
 
 export function Footer() {
