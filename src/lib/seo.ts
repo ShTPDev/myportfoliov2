@@ -1,31 +1,31 @@
 /**
- * seo.ts — base `Metadata` object exported by the root layout.
+ * seo.ts — base `Metadata` + `Viewport` exports + JSON-LD helper.
  *
- * In the Next.js App Router, every layout/page can `export const metadata`
- * (or `export async function generateMetadata`). Next reads it at build/render
- * time and emits the right <title>, <meta>, OpenGraph, Twitter, robots tags
- * into the document <head>. We never touch <head> manually.
+ * Next.js App Router reads `export const metadata` AND `export const viewport`
+ * from layouts/pages. The `Viewport` export is the right place for theme-color
+ * and viewport scaling — these are split out from `Metadata` in Next 14+.
  *
  * Docs: node_modules/next/dist/docs/01-app/01-getting-started/14-metadata-and-og-images.md
  */
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SITE } from "./constants";
 
-// `Metadata` is the shape Next.js expects. Annotating it gives full
-// autocomplete + catches typos like `openGrap`.
 export const baseMetadata: Metadata = {
-  // `metadataBase` resolves all relative URLs in OG/Twitter images.
   metadataBase: new URL(SITE.url),
-
-  // `title` can be a string OR an object with `default` + `template`.
-  // The template is used by child pages: `export const metadata = { title: "Projects" }`
-  // becomes "Projects — M3 / Portfolio" automatically.
   title: { default: SITE.title, template: `%s — ${SITE.name}` },
-
   description: SITE.description,
   authors: [{ name: SITE.author }],
-
+  keywords: [
+    "Belize software developer",
+    "marketplace",
+    "payment integration",
+    "e-commerce Belize",
+    "mobile app development",
+    "full stack systems",
+    "Flutter",
+    "Serverpod",
+  ],
   openGraph: {
     type: "website",
     title: SITE.title,
@@ -40,3 +40,37 @@ export const baseMetadata: Metadata = {
   },
   robots: { index: true, follow: true },
 };
+
+export const baseViewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#050816" },
+    { media: "(prefers-color-scheme: light)", color: "#050816" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+/**
+ * JSON-LD structured data for search engines (schema.org Person/Website).
+ * Returned as a plain object; embed via `<script type="application/ld+json">`.
+ */
+export function personJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SITE.author,
+    url: SITE.url,
+    jobTitle: "Full-stack Software Engineer",
+    description: SITE.description,
+    address: { "@type": "PostalAddress", addressCountry: "BZ" },
+    knowsAbout: [
+      "Flutter",
+      "Serverpod",
+      "TypeScript",
+      "Next.js",
+      "PostgreSQL",
+      "Payment integrations",
+    ],
+  };
+}

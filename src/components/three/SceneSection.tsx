@@ -1,22 +1,20 @@
 /**
  * SceneSection — full-section presentation of the 3D scene with copy overlay.
  *
- * Why dynamic import with `ssr: false`?
- *   Three.js touches browser-only globals (`window`, `WebGL`) at module
- *   load time. If we imported `<Scene>` directly into a server-rendered
- *   page, the build would fail. `next/dynamic({ ssr: false })` defers the
- *   import to the client and shows a fallback during load.
+ * Phase 6 perf:
+ *  - Skip rendering the WebGL scene on small screens (CPUs/GPUs strain).
+ *  - Skip if the user prefers reduced motion (a11y).
+ *  - Lazy-load Scene with `ssr: false` (Three.js needs window).
  *
- * Docs reminder: in Next.js 16 dynamic imports remain the canonical way to
- * gate client-only modules. See node_modules/next/dist/docs/01-app/02-guides/lazy-loading.md
+ * Docs: node_modules/next/dist/docs/01-app/02-guides/lazy-loading.md
  */
 
 "use client";
 
 import dynamic from "next/dynamic";
 import { Section } from "@/components/ui/Section";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-// Skeleton shown during chunk download.
 const Fallback = () => (
   <div className="flex h-full items-center justify-center">
     <span className="font-mono text-xs text-foreground-muted">
@@ -31,6 +29,12 @@ const Scene = dynamic(
 );
 
 export function SceneSection() {
+  const isSmall = useMediaQuery("(max-width: 640px)");
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  // On mobile or when user requests reduced motion, show a static placeholder
+  // instead of the full WebGL scene. Saves battery, avoids motion sickness.
+  const skip = isSmall || reducedMotion;
+
   return (
     <Section
       id="scene"
@@ -40,9 +44,19 @@ export function SceneSection() {
     >
       <div className="glass relative overflow-hidden rounded-2xl">
         <div className="aspect-[16/9] w-full">
-          <Scene />
+          {skip ? (
+            <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
+              <span className="font-mono text-xs uppercase tracking-wider text-foreground-muted">
+                {reducedMotion ? "reduced motion" : "mobile · perf mode"}
+              </span>
+              <span className="text-sm text-foreground-muted">
+                Static placeholder — open on a larger screen for the live scene.
+              </span>
+            </div>
+          ) : (
+            <Scene />
+          )}
         </div>
-        {/* Soft vignette so the canvas blends with the page background. */}
         <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
       </div>
     </Section>

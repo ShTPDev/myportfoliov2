@@ -62,5 +62,24 @@ body {
   *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* Visible focus ring for keyboard users (mouse focus stays clean). */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth in-page anchor scrolling. Reduced-motion overrides above. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce content shift while custom fonts swap in. */
+::selection {
+  background: rgba(0, 245, 255, 0.25);
+  color: #ffffff;
 }
