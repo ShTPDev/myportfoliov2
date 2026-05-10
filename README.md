@@ -39,8 +39,8 @@ src/
 ## Phases
 
 - [x] Phase 1 — Foundation
-- [ ] Phase 2 — Core UI
-- [ ] Phase 3 — Animation System
-- [ ] Phase 4 — Ecosystem Showcase
-- [ ] Phase 5 — Advanced Features
-- [ ] Phase 6 — Optimization
+- [x] Phase 2 — Core UI
+- [x] Phase 3 — Animation System
+- [x] Phase 4 — Ecosystem Showcase
+- [x] Phase 5 — Advanced Features (Terminal, Three.js)
+- [x] Phase 6 — Optimization (SEO, a11y, perf, mobile)
