@@ -13,7 +13,7 @@ import { SITE } from "@/lib/constants";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const routes = ["", "/projects", "/services", "/contact"];
+  const routes = ["", "/projects", "/services", "/about-me", "/contact"];
   return routes.map((path) => ({
     url: `${SITE.url}${path}`,
     lastModified: now,

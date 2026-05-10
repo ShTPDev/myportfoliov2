@@ -20,8 +20,8 @@ export function ServicesGrid() {
     <Section
       id="services"
       eyebrow="Core competencies"
-      title="The scope I bring to an IT Manager role."
-      description="Operations, infrastructure, full-stack delivery, and payments + security — backed by hands-on experience at BSIF and M3M3 Development."
+      title="The scope I bring to either an IT Manager or Software Engineering role."
+      description="Operations, infrastructure, full-stack delivery, and payments + security — same skill set, two ways to apply it. Backed by hands-on experience at BSIF and M3M3 Development."
     >
       <BentoGrid>
         {SERVICES.map((service, i) => (

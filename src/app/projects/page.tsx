@@ -29,18 +29,17 @@
  *    and BOTH the homepage and this page update.
  *
  * Layout strategy:
- *   Page header (Section eyebrow/title/description) → vertical stack of
- *   `StickyCaseStudy` sections, one per ECOSYSTEM entry. Each is its own
- *   tall scroll-locked block; CSS `position: sticky` naturally hands off
- *   from one section to the next as the user scrolls.
- *
- * Note: `CaseStudyCard.tsx` is intentionally kept as the smaller card variant
- * for a future ecosystem grid — not deleted.
+ *   Page header (Section eyebrow/title/description) → sticky scroll-spy
+ *   `ProjectNav` chip strip → vertical stack of `StickyCaseStudy` sections,
+ *   one per ECOSYSTEM entry. Each section is its own scroll-locked block;
+ *   CSS `position: sticky` naturally hands off from one section to the next
+ *   as the user scrolls.
  */
 
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { StickyCaseStudy } from "@/components/projects/StickyCaseStudy";
+import { ProjectNav } from "@/components/projects/ProjectNav";
 import { ECOSYSTEM } from "@/data/ecosystem";
 
 // `Metadata` is the typed shape Next.js expects. The `title: "Projects"`
@@ -51,7 +50,7 @@ import { ECOSYSTEM } from "@/data/ecosystem";
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Selected production systems shipped end-to-end by Shamar T. Patnett — M3 Marketplace, BeliBet, TraySoft Payment Module, and the BSIF SIF IT System.",
+    "Production systems and active builds by Shamar T. Patnett — M3 Marketplace (live on GCP), TraySoft Payment Module, the BSIF SIF IT System, BeliBet, BelizeHomes, M3 Inventory Manager, and Caribbean Bridges.",
 };
 
 export default function ProjectsPage(): React.JSX.Element {
@@ -62,16 +61,31 @@ export default function ProjectsPage(): React.JSX.Element {
       description="End-to-end ownership of every system below — from architecture and code through deployment and operations. As the sole IT authority at the Belize Social Investment Fund and the founder of M3M3 Development, each project here is something I designed, built, and put into production myself or alongside a team I led."
     >
       {/*
-        Vertical stack of scroll-locked case studies. Each `StickyCaseStudy`
-        renders its own tall section (200vh on md+), so the user scrolls
-        through them one at a time — the visual on the left pins, the content
-        on the right advances, then the next project takes over the sticky
-        slot.
+        Sticky scroll-spy nav. We pre-compute the chip list on the server
+        (this page IS a server component) — no need to ship the data array
+        to the client. The `ProjectNav` itself is a client component (it
+        uses IntersectionObserver), and Next.js handles the boundary.
 
-        `space-y-24` adds generous gap between siblings on md+ — gives the
-        eye a beat between sections so they don't bleed together.
+        `accentClass` is reused as the chip's tone-dot class so the strip
+        doubles as a colour legend for the page.
       */}
-      <div className="space-y-24 md:space-y-40">
+      <ProjectNav
+        items={ECOSYSTEM.map((e) => ({
+          slug: e.slug,
+          label: e.title,
+          tone: e.accentClass,
+        }))}
+      />
+
+      {/*
+        Vertical stack of scroll-locked case studies. Each `StickyCaseStudy`
+        sizes itself to its right column (sticky panel pins for that
+        duration), so we don't have a fixed `min-h` anymore.
+
+        `space-y-16` (md+ `space-y-20`) adds generous gap between siblings —
+        gives the eye a beat between sections so they don't bleed together.
+      */}
+      <div className="space-y-16 md:space-y-20">
         {ECOSYSTEM.map((entry) => {
           // ── Server → Client boundary note ──
           // This page is a Server Component. `StickyCaseStudy` is a Client
@@ -89,10 +103,11 @@ export default function ProjectsPage(): React.JSX.Element {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { icon: _icon, ...serializable } = entry;
           return (
-            // `key` must be stable + unique. `entry.kind` is a literal-union
-            // member ("marketplace" | "betting" | "payments" | "internal")
-            // and every entry has a different one, so it's safe.
-            <StickyCaseStudy key={entry.kind} entry={serializable} />
+            // `key` must be stable + unique. `entry.slug` is unique per
+            // entry (and matches the section's `id` for the scroll-spy
+            // nav), so it's safer than `entry.kind` if we ever introduce
+            // two projects of the same kind.
+            <StickyCaseStudy key={entry.slug} entry={serializable} />
           );
         })}
       </div>

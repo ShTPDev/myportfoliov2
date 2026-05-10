@@ -186,18 +186,32 @@ export function Terminal() {
   }, []);
 
   // ── Auto-focus the input when interactive mode starts ─────────────────
+  // `{ preventScroll: true }` is critical here — without it, the browser
+  // scrolls the input into view when we focus it, which can yank the page
+  // down to the terminal section right after a route change. We want
+  // focus, not navigation.
   useEffect(() => {
     if (mode.phase === "interactive") {
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [mode.phase]);
 
   // ── Auto-scroll on new output ─────────────────────────────────────────
-  // `scrollIntoView` is a DOM method — we trigger it whenever the entry
-  // list grows. The bottom anchor is a tiny invisible div pinned below
-  // the last entry.
+  // Scroll the *terminal body* (which has `max-h + overflow-y-auto`) to
+  // its own bottom — never the whole page. We do this by mutating the
+  // scroll container directly instead of using `scrollIntoView`, because
+  // the latter walks UP the DOM and will scroll the window too if the
+  // anchor isn't already inside the viewport. That caused the page to
+  // jump to the CLI section right after route changes.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+    const anchor = bottomRef.current;
+    if (!anchor) return;
+    // The closest ancestor with `overflow-y: auto` is our scroll container.
+    const container = anchor.parentElement;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
+    // Original call kept commented for reference:
+    // bottomRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
   }, [entries.length, mode.phase]);
 
   // ── Command execution ─────────────────────────────────────────────────

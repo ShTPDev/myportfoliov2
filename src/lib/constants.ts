@@ -11,11 +11,12 @@ export const SITE = {
   name: "Shamar T. Patnett",
   shortName: "STP",
   url: "https://m3m3development.com",
-  title: "Shamar T. Patnett — IT Manager · Full-Stack Engineer · Belize",
+  title:
+    "Shamar T. Patnett — IT Manager & Software Engineer · Belize",
   description:
-    "IT Manager candidate, founder of M3M3 Development, sole IT authority at BSIF. Full-stack engineer who shipped a live 287K-LOC marketplace with Stripe, PayPal, and Belize Bank gateway payments in production (any card, any issuer).",
+    "Open to IT Manager and Software Engineering roles. Founder of M3M3 Development, sole IT authority at BSIF. Shipped a live 287K-LOC marketplace with Stripe, PayPal, and Belize Bank gateway payments in production (any card, any issuer).",
   author: "Shamar T. Patnett",
-  role: "Information Technology Manager",
+  role: "IT Manager · Software Engineer",
   location: "Belmopan, Belize",
   email: "Shamarpatnett2000@gmail.com",
   phone: "+501-625-0795",
@@ -31,6 +32,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/services", label: "Services" },
+  { href: "/about-me", label: "About me" },
   { href: "/contact", label: "Contact" },
 ] as const;
 

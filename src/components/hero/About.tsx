@@ -47,8 +47,8 @@ export function About() {
     <Section
       id="about"
       eyebrow="About"
-      title="IT Manager and full-stack engineer based in Belize."
-      description="Five-plus years of progressive IT experience across operations, infrastructure, and software delivery — currently the sole IT authority at the Belize Social Investment Fund and founder of M3M3 Development."
+      title="IT Manager and software engineer based in Belize."
+      description="Five-plus years of progressive IT experience across operations, infrastructure, and full-stack engineering. Sole IT authority at the Belize Social Investment Fund, founder of M3M3 Development, and open to IT-Manager-track or Software-Engineer-track roles."
     >
       <div className="grid grid-cols-1 gap-10 md:grid-cols-5 md:gap-8">
         <Reveal direction="left" className="md:col-span-2">

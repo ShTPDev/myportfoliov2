@@ -2,19 +2,19 @@
  * Home page (`/` route).
  *
  * Section order:
- *   Hero → SystemStatus → About → Ecosystem → Architecture → Scene → Terminal → Services
+ *   Hero → SystemStatus → About → Ecosystem → Architecture → Terminal → Services
  *
  * Server Component. Children mix server + client; Next handles the boundary.
  *
- * Note on `SystemStatus`: it's an *async* Server Component that fetches
- * GitHub data with a 1-hour cache. Because it's async, marking the parent
- * `Home` async too would be equally valid — but Next allows nested async
- * components without the parent needing to await them, and that's what we
- * use here. (The parent renders its children, Next streams them in.)
+ * The 3D `<SceneSection />` was removed — it served no portfolio purpose
+ * for an IT-Manager / software-engineering pitch and added Three.js +
+ * react-three-fiber to the bundle. The component file itself is kept on
+ * disk under `src/components/three/` in case it's wanted again later.
  *
- * `Stats` (the old vanity-metric strip) is intentionally still imported
- * elsewhere — actually it's NOT imported anymore here. The file is left
- * on disk in `src/components/hero/Stats.tsx` for easy revert.
+ * Similarly, the old `<Stats />` vanity-metric strip is no longer rendered;
+ * `<SystemStatus />` (a live Stripe-style status bar fed from real GitHub
+ * data + git SHA) replaces it. The Stats file is also kept on disk for
+ * easy revert.
  */
 
 import { Hero } from "@/components/hero/Hero";
@@ -22,7 +22,6 @@ import { SystemStatus } from "@/components/hero/SystemStatus";
 import { About } from "@/components/hero/About";
 import { EcosystemShowcase } from "@/components/ecosystem/EcosystemShowcase";
 import { ArchitectureDiagram } from "@/components/ecosystem/ArchitectureDiagram";
-import { SceneSection } from "@/components/three/SceneSection";
 import { TerminalSection } from "@/components/terminal/TerminalSection";
 import { ServicesGrid } from "@/components/ecosystem/ServicesGrid";
 
@@ -30,13 +29,10 @@ export default function Home() {
   return (
     <>
       <Hero />
-      {/* SystemStatus replaced the old <Stats /> "vanity metrics" strip.
-          It renders a Stripe-style live ops status bar instead. */}
       <SystemStatus />
       <About />
       <EcosystemShowcase />
       <ArchitectureDiagram />
-      <SceneSection />
       <TerminalSection />
       <ServicesGrid />
     </>

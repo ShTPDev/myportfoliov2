@@ -21,7 +21,7 @@ import {
   SpotlightGrid,
 } from "@/components/ui/SpotlightCard";
 import { EcosystemCard } from "./EcosystemCard";
-import { ECOSYSTEM } from "@/data/ecosystem";
+import { FEATURED_ECOSYSTEM } from "@/data/ecosystem";
 
 export function EcosystemShowcase() {
   return (
@@ -36,9 +36,16 @@ export function EcosystemShowcase() {
         It writes `--mx` / `--my` CSS variables on itself; CSS cascade does
         the rest, so every SpotlightCard inside reads the same coordinates
         and the spotlight feels like one shared light source.
+
+        Layout: 1 col (mobile) → 2 cols (md+) for a clean 2x2 across the
+        four featured projects. We previously promoted M3 to a wide card
+        on lg with a 4-col grid (2+1+1 / 1+blank), but the result left
+        BeliBet stranded alone on row 2. Going back to a symmetric 2x2
+        keeps every card the same width — no awkward gap, M3 still gets
+        first position in reading order.
       */}
       <SpotlightGrid className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {ECOSYSTEM.map((entry, i) => (
+        {FEATURED_ECOSYSTEM.map((entry, i) => (
           <Reveal key={entry.kind} delay={(i % 2) * 0.08} className="h-full">
             <SpotlightCard className="h-full">
               {/*

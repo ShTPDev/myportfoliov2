@@ -1,62 +1,66 @@
 /**
- * /services route — "What I deliver as IT Manager" page.
+ * /services route — "What I deliver" page.
  *
- * This is the dedicated services page for Shamar Patnett's BGLL IT Manager
- * application. It expands on the homepage's `ServicesGrid` with two extra
- * sections:
+ * Top-level layout (top → bottom):
  *
- *   1. Four-pillar competencies, each annotated with a *real shipped
- *      example* from M3 Marketplace / BSIF. The competency data is the
- *      same `SERVICES` array used on the homepage — single source of truth.
- *
- *   2. A "Day-one deliverables" list — five concrete things Shamar can ship
- *      in his first weeks at BGLL. The copy here is intentionally
- *      BGLL-specific (Fi We Boledo, Belize Bank, Angular/Groovy ramp). It
- *      mirrors the highlight box in the cover-letter CV so the portfolio
- *      and the paper application tell the same story.
+ *   1. Hero header (page title + subtitle)
+ *   2. Tech-stack alignment strip (chip row of 14 technologies)
+ *   3. Dual-track toggle  ← lives inside <TrackedSections>
+ *   4. Four-pillar competencies, filtered by track
+ *   5. Day-one deliverables, filtered by track + with metric chips
+ *   6. 30 / 60 / 90 onboarding plan
+ *   7. Two-CTA closing card (book call + download summary PDF)
  *
  * Server Component:
- *   No `"use client"` directive. The page renders purely on the server,
- *   which is the App Router default. Children may opt in to client-side
- *   hydration (e.g. `Reveal` uses Framer Motion → marked `"use client"`
- *   inside its own file) — Next.js handles the boundary automatically.
+ *   No `"use client"` directive on this file. The page renders purely on the
+ *   server, which is the App Router default. The interactive bits (tab
+ *   strip, scroll-reveal animations) are scoped to their own client
+ *   children — `<TrackedSections>` wraps both filterable sections so the
+ *   `useState` for the toggle lives in ONE place. Keeping the page itself
+ *   server-side preserves our `metadata` export (Next refuses to build a
+ *   client component that exports `metadata`).
  *
- *   Docs: node_modules/next/dist/docs/01-app/01-getting-started/06-server-and-client-components.md
+ *   Docs:
+ *   - node_modules/next/dist/docs/01-app/01-getting-started/06-server-and-client-components.md
+ *   - node_modules/next/dist/docs/01-app/01-getting-started/14-metadata-and-og-images.md
  *
  * Concept showcase:
  *  - **Route segments** — placing a `page.tsx` under `src/app/services/`
- *    creates the `/services` URL automatically. No router config needed.
+ *    creates the `/services` URL automatically.
  *  - **`metadata` export** — App Router uses static `export const metadata`
- *    instead of `<Head>`; Next merges this with the root layout's
- *    `baseMetadata`, so the page title becomes "Services | …site title…".
- *    Docs: node_modules/next/dist/docs/01-app/01-getting-started/14-metadata-and-og-images.md
- *  - **`as const` on a tuple-of-objects** — freezes the day-one array's
+ *    instead of `<Head>`; Next merges with the root layout's `baseMetadata`.
+ *  - **`as const` on a tuple-of-objects** — freezes the day-one tuple's
  *    shape so each entry's `headline` keeps its literal string type. We
- *    don't strictly need it here, but it's the same pattern used in
- *    `services.ts`, so reusing it keeps the codebase consistent.
- *  - **Co-locating data with the page** — small one-page-only datasets
- *    live next to their consumer. We only promote data into `src/data/`
- *    when it's reused across multiple components.
+ *    rely on this when typing the prop into `<TrackedSections>`.
+ *  - **Co-locating data with the page** — the day-one tuple and the
+ *    competency-example list are page-local editorial copy; we keep them
+ *    here rather than promoting to `src/data/` because they're not reused.
+ *  - **Server-to-client prop passing** — function values (icon components)
+ *    survive the boundary because they come from the same module graph;
+ *    plain string/array data also crosses fine. Anything serializable.
  */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarClock, Download } from "lucide-react";
 
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/animations/Reveal";
-import { CompetencyCard } from "@/components/projects/CompetencyCard";
-import { DayOneRow } from "@/components/projects/DayOneRow";
-import { SERVICES } from "@/data/services";
+import { OnboardingPlan } from "@/components/projects/OnboardingPlan";
+import { TechStackStrip } from "@/components/projects/TechStackStrip";
+import {
+  TrackedSections,
+  type DayOneRowEntry,
+} from "@/components/projects/TrackedSections";
 
-// `Metadata` is the type from Next for the `metadata` export. Using the
-// type (rather than letting it be inferred) gives us autocomplete on every
+// `Metadata` is the type from Next for the `metadata` export. Using the type
+// (rather than letting it be inferred) gives us autocomplete on every
 // available SEO field. The root layout's `baseMetadata` provides the title
 // template, so this becomes e.g. "Services | Shamar T. Patnett".
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Four pillars of IT leadership delivery — operations, infrastructure, full-stack engineering, and payments + security — plus the concrete deliverables I can ship at BGLL on day one.",
+    "Four pillars covering both IT-Manager and software-engineering roles — operations, infrastructure, full-stack delivery, and payments + security — plus the concrete deliverables I can ship on day one.",
 };
 
 /**
@@ -66,9 +70,9 @@ export const metadata: Metadata = {
  * `as const` makes this a `readonly [string, string, string, string]`
  * tuple; TS will catch us if the length drifts out of sync with SERVICES.
  *
- * Why not put these on the `Service` interface itself? Because the
- * homepage `ServicesGrid` deliberately does *not* show the example line —
- * it's a /services-only embellishment. Keeping `Service` minimal in
+ * Why not put these on the `Service` interface itself? Because the homepage
+ * `ServicesGrid` deliberately does *not* show the example line — it's a
+ * /services-only embellishment. Keeping `Service` minimal in
  * `data/services.ts` avoids leaking page-specific copy into shared data.
  */
 const COMPETENCY_EXAMPLES = [
@@ -83,130 +87,179 @@ const COMPETENCY_EXAMPLES = [
 ] as const;
 
 /**
- * Day-one deliverables for BGLL. Copy is verbatim from the cover-letter
- * highlight box and the CV — keeping these synchronised matters because
- * recruiters cross-reference the portfolio against the printed CV.
+ * Day-one deliverables. Copy is intentionally GENERIC (category-language,
+ * not company-specific) so the same page reads sensibly to any prospective
+ * employer — IT-Manager hire OR Software-Engineer hire.
  *
- * Each row is `{ headline, detail }`. The `<DayOneRow>` component supplies
- * the numeric badge (`01`, `02`, …) from the array index.
+ * Each row is `DayOneRowEntry` (see `TrackedSections`). The shape is:
+ *   { headline, detail, track[], metric?, iconKey? }
+ *
+ * `iconKey` is a STRING that the client-side TrackedSections re-resolves into
+ * a Lucide component. Why a string and not the component itself? Because
+ * function values can't cross the React Server Component → Client Component
+ * boundary. We use the same `string-key + Record<key, LucideIcon>` pattern
+ * that `StickyCaseStudy` uses elsewhere in the codebase.
+ *
+ * `track` drives the dual-track toggle filter. Most rows belong to BOTH
+ * lanes; legacy-stack ramp is SWE-only, ops ownership is IT-only, etc.
  */
-const DAY_ONE_DELIVERABLES = [
+const DAY_ONE_DELIVERABLES: readonly DayOneRowEntry[] = [
   {
-    headline: "Local card payments in the Fi We Boledo app",
+    headline: "Local card payments via the bank gateway",
+    // Generalised: was BGLL/Fi-We-Boledo specific. Kept the concrete
+    // deliverable (gateway integration, hosted payment page, webhooks,
+    // reconciliation) and the timeline; dropped the company name lock.
     detail:
-      "The Belize Bank payment gateway accepts any debit or credit card from any issuer — and I have already shipped that integration in production on M3 Marketplace (hosted payment page, HMAC-signed webhooks, tokenized cards, reconciliation). Adapting the same pattern into Fi We Boledo is a 6–8 week effort, not a research project. Stripe and PayPal are also already wired up on M3, so they are available as fallbacks if BGLL ever wants international card support.",
+      "I have already shipped Belize Bank gateway integration on M3 Marketplace — hosted payment page, HMAC-signed webhooks, tokenized cards, reconciliation. Adapting the same pattern into any local card-payment surface that today only supports digital wallets is a focused 6–8 week effort, not a research project.",
+    metric: "6–8 weeks",
+    iconKey: "credit-card",
+    track: ["it", "swe"],
   },
   {
-    headline: "Auth security uplift across the BGLL stack",
+    headline: "Auth security uplift across the stack",
     detail:
-      "Multi-factor authentication, biometric login (fingerprint / face ID), and PII masking for the bank-account fields currently shown in plain text on the Payment Information screen.",
+      "Multi-factor authentication, biometric login (fingerprint / face ID), and PII masking for any bank-account fields currently rendered in plain text. Pattern is already proven in production on M3.",
+    metric: "MFA · biometric · PCI",
+    iconKey: "shield-check",
+    track: ["it", "swe"],
   },
   {
     headline: "Operational ownership from week one",
+    // Generalised: dropped "BGLL" framing, kept the BSIF proof point.
     detail:
-      "Full IT-Manager-equivalent duties — procurement, vendor management, infrastructure, cybersecurity policy, and L1/L2 support — are what I run daily at BSIF today. The role is already in muscle memory.",
+      "Procurement, vendor management, infrastructure, cybersecurity policy, and L1/L2 support are what I run daily at BSIF today. The role is already in muscle memory — no ramp on the operations side.",
+    metric: "Daily at BSIF",
+    iconKey: "settings",
+    track: ["it"],
   },
   {
-    headline: "UX audit & iteration on the Boledo customer flows",
+    headline: "UX audit & iteration on customer flows",
     detail:
-      "Targeted improvements to the ticket purchase flow, winning numbers display, and empty-state screens — informed by shipping a 12-module customer-facing mobile app on M3 Marketplace.",
+      "Targeted improvements to purchase, results, and empty-state screens — informed by shipping a 12-module customer-facing mobile app on M3 Marketplace.",
+    metric: "12-module mobile app",
+    iconKey: "eye",
+    track: ["swe"],
   },
   {
-    headline: "Transitional ramp on Angular & Groovy",
+    headline: "Transitional ramp on the team's existing stack",
+    // Generalised: was "Angular & Groovy" hard-coded; now reads as a
+    // category-language onboarding plan that happens to apply to whatever
+    // legacy stack the team uses.
     detail:
-      "A focused 4–6 week onboarding plan to reach productive contribution velocity in BGLL's existing Angular/Groovy stack, while delivering on the IT operations and payment/security work above in parallel.",
+      "A focused 4–6 week onboarding plan to reach productive velocity on the team's existing web stack, while delivering on IT-operations and payment / security work in parallel.",
+    metric: "4–6 weeks",
+    iconKey: "git-branch",
+    track: ["swe"],
   },
 ] as const;
 
 export default function ServicesPage() {
   return (
     <>
-      {/* ── Section 1: page header + four competency pillars ───────────── */}
+      {/* ── Section 0: Page header ─────────────────────────────────────── */}
       <Section
         eyebrow="Services"
-        title="What I deliver as IT Manager."
-        description="Four pillars of scope — IT operations, network and infrastructure, full-stack engineering, and payments + security — each backed by production work shipped at BSIF and on the M3 Marketplace platform."
+        title="What I deliver as IT Manager or Software Engineer."
+        description="Four pillars of scope spanning both tracks — IT operations, network and infrastructure, full-stack engineering, and payments + security — each backed by production work shipped at BSIF and on the M3 Marketplace platform."
+        className="!pb-4"
       >
-        {/*
-          Two-column grid from `md:` breakpoint upward. On mobile we collapse
-          to a single column so each card gets the full width — easier to
-          read on a phone than two cramped halves.
-        */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {SERVICES.map((service, i) => (
-            // `Reveal` is a client component (Framer Motion). Wrapping each
-            // card in one gives us a staggered fade-in as the user scrolls;
-            // `delay={i * 0.08}` cascades the entries.
-            <Reveal key={service.title} delay={i * 0.08} className="h-full">
-              <CompetencyCard
-                service={service}
-                example={COMPETENCY_EXAMPLES[i]}
-              />
-            </Reveal>
-          ))}
-        </div>
+        {/* Tech-stack chip row — recruiter-friendly keyword surface. */}
+        <Reveal>
+          <TechStackStrip />
+        </Reveal>
       </Section>
 
-      {/* ── Section 2: Day-one deliverables ─────────────────────────────── */}
+      {/*
+        TrackedSections is a CLIENT component (it owns the `useState` for the
+        track toggle). It renders:
+          - the toggle pill
+          - the filtered competencies grid
+          - the filtered day-one rows
+
+        We pass the index-aligned competency examples and the day-one tuple
+        as props. Both are plain string / object data → crosses the
+        server→client boundary safely. The icon components attached to each
+        row also cross fine because they come from the shared module graph
+        (Lucide), not from the server's runtime state.
+      */}
+      <TrackedSections
+        competencyExamples={COMPETENCY_EXAMPLES}
+        dayOneRows={DAY_ONE_DELIVERABLES}
+      />
+
+      {/* ── Section 6: 30/60/90 onboarding plan ────────────────────────── */}
       <Section
-        id="day-one"
-        eyebrow="Day-one deliverables"
-        title="What I can ship at BGLL in the first weeks."
-        description="Five concrete outcomes — not aspirations. Each one maps to work I have already executed at BSIF or shipped in production on M3 Marketplace."
+        eyebrow="30 / 60 / 90"
+        title="A structured first quarter."
+        description="The standard interview question, answered on the page. Listen first, ship quick wins, then publish a roadmap."
       >
-        <div className="flex flex-col gap-3">
-          {DAY_ONE_DELIVERABLES.map((row, i) => (
-            <Reveal key={row.headline} delay={i * 0.06}>
-              {/* Index is 0-based in the array; add 1 so we display "01" */}
-              <DayOneRow
-                index={i + 1}
-                headline={row.headline}
-                detail={row.detail}
-              />
-            </Reveal>
-          ))}
-        </div>
+        <OnboardingPlan />
       </Section>
 
-      {/* ── Section 3: Closing CTA ──────────────────────────────────────── */}
+      {/* ── Section 7: Two-CTA closing card ────────────────────────────── */}
       <Section className="pb-28">
         <Reveal>
           <div className="glass relative overflow-hidden rounded-3xl p-8 sm:p-12">
-            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col items-start gap-6">
               <div className="max-w-2xl">
                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent-cyan">
                   Next step
                 </span>
                 <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Let&apos;s talk.
+                  Two ways to start a conversation.
                 </h3>
                 <p className="mt-3 text-foreground-muted">
-                  If any of this lines up with what BGLL needs, I&apos;d
-                  welcome an interview. Direct line below — happy to walk
-                  through the Belize Bank integration, MFA design, or the
-                  Angular/Groovy ramp plan in detail.
+                  Pick the one that fits your timeline. Happy to walk through
+                  the Belize Bank integration, MFA design, or the legacy-stack
+                  ramp plan in detail.
                 </p>
               </div>
+
               {/*
-                `next/link` is the App Router's client-side navigation
-                primitive: it prefetches the destination route and avoids
-                a full page reload. Using a plain <a href="/contact"> would
-                also work but would re-fetch all shared chunks.
+                Two-button CTA group. On mobile the buttons stack; from `sm:`
+                they sit side-by-side. The second button is `<a download>`
+                rather than `<Link>` so the browser triggers a file download
+                instead of a route navigation — the PDF lives in /public.
               */}
-              <Link
-                href="/contact"
-                className={[
-                  "inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium",
-                  "bg-foreground text-background transition hover:opacity-90",
-                  // `motion-safe:` so the icon nudge respects user prefs.
-                  "motion-safe:hover:[&_svg]:translate-x-0.5",
-                ].join(" ")}
-              >
-                Contact Shamar
-                {/* `transition` on the icon itself so the parent's
-                    `hover:[&_svg]:translate-x-0.5` animates smoothly. */}
-                <ArrowRight size={16} className="transition" />
-              </Link>
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
+                {/*
+                  Primary CTA — `next/link` for client-side nav. Solid
+                  foreground/background pair pulls the eye to this option as
+                  the recommended first step.
+                */}
+                <Link
+                  href="/contact"
+                  className={[
+                    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium",
+                    "bg-foreground text-background transition hover:opacity-90",
+                    "motion-safe:hover:[&_svg.arrow]:translate-x-0.5",
+                  ].join(" ")}
+                >
+                  <CalendarClock size={16} aria-hidden />
+                  Book a 15-min call
+                  <ArrowRight size={16} className="arrow transition" />
+                </Link>
+
+                {/*
+                  Secondary CTA — plain `<a>` with `download` so the browser
+                  saves the file rather than navigating. The actual PDF will
+                  be dropped into /public/about/ by the owner; until then the
+                  link 404s gracefully (which is fine in a portfolio context
+                  — the live page just shows a "not found" if clicked early).
+                */}
+                <a
+                  href="/about/services-summary.pdf"
+                  download
+                  className={[
+                    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium",
+                    "border border-white/10 bg-white/5 text-foreground transition",
+                    "hover:border-white/20 hover:bg-white/10",
+                  ].join(" ")}
+                >
+                  <Download size={16} aria-hidden />
+                  Download engagement summary (PDF)
+                </a>
+              </div>
             </div>
           </div>
         </Reveal>

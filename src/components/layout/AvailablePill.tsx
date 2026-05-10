@@ -40,8 +40,14 @@ type AvailablePillProps = Readonly<{
 }>;
 
 export function AvailablePill({
-  message = "Open to IT Manager roles · Belize",
-  subject = "Re: IT Manager role",
+  // Updated copy (UX pass): leads with intent ("Open to roles"), then the
+  // three pieces of context a hiring manager actually wants in 1-2 seconds:
+  //   - Availability date  → "May 2026" (when I can start)
+  //   - Location           → "Belmopan" (where I am, no relocation surprise)
+  //   - Response SLA       → "24h reply" (how fast they'll hear back)
+  // Middle-dot separators keep it scannable without looking like a bullet list.
+  message = "Open to roles · May 2026 · Belmopan · 24h reply",
+  subject = "Re: IT Manager / Software Engineer role",
   className = "",
 }: AvailablePillProps) {
   // `encodeURIComponent` escapes characters that aren't safe in a URL
@@ -61,7 +67,7 @@ export function AvailablePill({
       // `aria-label` makes the link's purpose explicit to screen readers
       // (otherwise they'd just read the visible text, which doesn't say
       // "this is a mailto link").
-      aria-label={`Email ${SITE.author} about an IT Manager role`}
+      aria-label={`Email ${SITE.author} about an IT Manager or Software Engineering role`}
     >
       {/*
         Two stacked spans give the dot a "ping" effect: an outer animated

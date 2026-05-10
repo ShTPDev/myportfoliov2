@@ -158,6 +158,15 @@ const ACTIONS: ReadonlyArray<Action> = [
     href: "/services",
   },
   {
+    id: "about-me",
+    label: "Meet the engineer",
+    hint: "/about-me",
+    keywords: ["about", "bio", "resume", "cv", "engineer", "shamar"],
+    icon: Briefcase,
+    type: "link",
+    href: "/about-me",
+  },
+  {
     id: "contact",
     label: "Contact",
     hint: "/contact",
@@ -211,18 +220,28 @@ const ACTIONS: ReadonlyArray<Action> = [
     type: "external",
     href: SOCIALS.company,
   },
+  // Résumé + CV both live on the /about-me page. The page has the embedded
+  // preview AND the actual download button at the top of each section, so
+  // routing the user there gives them context + control. The hash anchors
+  // (`#resume`, `#cv`) are wired on the corresponding <Section id="..." />
+  // elements in src/app/about-me/page.tsx.
   {
     id: "resume",
-    label: "Download résumé",
-    hint: "/resume.pdf",
-    keywords: ["resume", "cv", "download", "pdf"],
+    label: "View résumé",
+    hint: "/about-me#resume",
+    keywords: ["resume", "preview", "download", "pdf", "one-pager"],
     icon: Download,
-    type: "fn",
-    run: () => {
-      // `window.open` with a same-origin path triggers the browser's
-      // default PDF behavior (preview tab, then download).
-      window.open("/resume.pdf", "_blank", "noopener,noreferrer");
-    },
+    type: "link",
+    href: "/about-me#resume",
+  },
+  {
+    id: "cv",
+    label: "View CV",
+    hint: "/about-me#cv",
+    keywords: ["cv", "curriculum", "vitae", "long-form", "cover letter", "pdf"],
+    icon: Download,
+    type: "link",
+    href: "/about-me#cv",
   },
 ];
 

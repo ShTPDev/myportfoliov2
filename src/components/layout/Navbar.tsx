@@ -21,16 +21,33 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="relative mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-2.5 sm:px-6">
+        {/*
+          Logo wrapper — `group` enables `group-hover:` on the children so
+          we can light up the gradient text without putting the hover
+          listener on the inner spans (which would fight `text-gradient`).
+        */}
         <Link
           href="/"
-          className="font-mono text-sm tracking-tight text-foreground"
+          className="group font-mono text-sm tracking-tight text-foreground"
         >
           {/*
-            Logo glyph uses `SITE.shortName` ("STP") — keeps the navbar tight
-            on mobile and reads as a monogram. Full name is still in the
-            page title + footer for SEO and humans.
+            Logo uses the full name; on small screens it falls back to the
+            short monogram ("STP") so the navbar stays tight on mobile.
+            `hidden sm:inline` / `sm:hidden` swap the visible text at the sm
+            breakpoint without duplicating link wrappers.
+
+            Hover effect: the `text-gradient` utility paints the text with a
+            cyan→violet gradient. On hover, we bump brightness (≈ a vibrancy
+            kick) and add a soft drop-shadow so the gradient feels "lit up"
+            without changing the colours themselves. `transition` smooths
+            both at the same easing.
           */}
-          <span className="text-gradient font-semibold">{SITE.shortName}</span>
+          <span className="text-gradient hidden font-semibold transition duration-200 group-hover:brightness-125 group-hover:drop-shadow-[0_0_12px_rgba(0,245,255,0.35)] sm:inline">
+            {SITE.author}
+          </span>
+          <span className="text-gradient font-semibold transition duration-200 group-hover:brightness-125 group-hover:drop-shadow-[0_0_12px_rgba(0,245,255,0.35)] sm:hidden">
+            {SITE.shortName}
+          </span>
         </Link>
 
         {/* Desktop links — hidden under sm breakpoint. */}

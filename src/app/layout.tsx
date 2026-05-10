@@ -20,6 +20,11 @@ import { ScrollProgress } from "@/components/layout/ScrollProgress";
 // the ⌘K shortcut works on every page. Mounting per-page would either
 // duplicate listeners or miss routes that forget to include it.
 import { CommandPalette } from "@/components/layout/CommandPalette";
+// ScrollToTop forces window scroll to (0,0) on every route change so the
+// browser doesn't restore a mid-page scroll position when the user clicks
+// "Home". See the file header for why this is needed alongside the global
+// `scroll-behavior: smooth` rule.
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { baseMetadata, baseViewport, personJsonLd } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -64,6 +69,7 @@ export default function RootLayout({
         />
 
         <ThemeProvider>
+          <ScrollToTop />
           <ScrollProgress />
           <Navbar />
           <main id="main" className="flex-1 flex flex-col">

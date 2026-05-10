@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shamar T. Patnett — Cover Letter & CV</title>
+<style>
+  :root {
+    --navy: #1B3A5C;
+    --navy-deep: #142B45;
+    --red: #C0392B;
+    --ink: #1A1A2E;
+    --muted: #5A6373;
+    --line: #D8DEE5;
+    --bg-soft: #F4F6FA;
+    --gold: #D4A949;
+    --side-fg: #E8EEF7;
+    --side-muted: #A8C0D8;
+  }
+
+  @page { size: letter; margin: 0; }
+  @media print {
+    body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .page { page-break-after: always; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+    html, body { background: white; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #E2E5EA; }
+  body {
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    background: white;
+    margin: 0.25in auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  /* ───────── Cover letter page ───────── */
+  .cover {
+    padding: 0;
+  }
+  .cover-banner {
+    background: linear-gradient(120deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: white;
+    padding: 0.42in 0.75in;
+    position: relative;
+  }
+  .cover-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6pt;
+    background: linear-gradient(90deg, var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+  }
+  .cover-name {
+    font-size: 24pt;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-bottom: 4pt;
+  }
+  .cover-role {
+    font-size: 10pt;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .cover-meta {
+    margin-top: 9pt;
+    font-size: 9pt;
+    color: var(--side-fg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14pt;
+  }
+  .cover-meta span { display: inline-flex; align-items: center; gap: 5pt; }
+  .cover-meta svg { fill: var(--gold); }
+  .cover-meta a { color: var(--side-fg); text-decoration: none; }
+
+  .cover-body {
+    padding: 0.45in 0.85in 0.5in;
+  }
+
+  .cover-date {
+    font-size: 10pt;
+    color: var(--muted);
+    margin-bottom: 16pt;
+  }
+  .cover-recipient {
+    margin-bottom: 18pt;
+    line-height: 1.45;
+  }
+  .cover-recipient .recipient-name {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .cover-recipient .recipient-line {
+    color: var(--ink);
+    font-size: 10pt;
+  }
+
+  .cover-greeting {
+    margin-bottom: 12pt;
+    font-size: 10.5pt;
+    color: var(--ink);
+  }
+
+  .cover-body p {
+    margin-bottom: 11pt;
+    text-align: justify;
+    text-justify: inter-word;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+  .cover-body p strong { color: var(--navy); font-weight: 700; }
+
+  .cover-highlight {
+    background: linear-gradient(135deg, #FAF6EC 0%, #F4ECD4 100%);
+    border-left: 3px solid var(--gold);
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    border-radius: 0 4pt 4pt 0;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+  .cover-highlight strong { color: var(--navy); }
+
+  .cover-sign {
+    margin-top: 22pt;
+  }
+  .cover-sign .sig-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 11pt;
+    margin-top: 30pt;
+  }
+
+  /* ───────── CV header band ───────── */
+  .cv-header {
+    background: linear-gradient(120deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: white;
+    padding: 0.32in 0.55in;
+    position: relative;
+  }
+  .cv-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4pt;
+    background: linear-gradient(90deg, var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+  }
+  .cv-name-row {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 14pt;
+  }
+  .cv-name {
+    font-size: 22pt;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.005em;
+  }
+  .cv-role {
+    font-size: 9pt;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4pt;
+  }
+  .cv-contacts {
+    text-align: right;
+    font-size: 8.5pt;
+    color: var(--side-fg);
+    line-height: 1.55;
+  }
+  .cv-contacts a { color: var(--side-fg); text-decoration: none; }
+
+  .cv-body {
+    padding: 0.30in 0.55in 0.35in;
+  }
+
+  .cv-body section { margin-top: 12pt; }
+  .cv-body section:first-child { margin-top: 6pt; }
+
+  h2.sec {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    border-bottom: 1.5px solid var(--red);
+    padding-bottom: 3pt;
+    margin-bottom: 8pt;
+  }
+
+  .profile-text {
+    font-size: 9.6pt;
+    line-height: 1.55;
+    text-align: justify;
+  }
+
+  .achievements { list-style: none; }
+  .achievements li {
+    font-size: 9.4pt;
+    line-height: 1.5;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .achievements li::before {
+    content: '▸';
+    position: absolute; left: 0; top: 0;
+    color: var(--red); font-weight: 700;
+  }
+  .achievements li strong { color: var(--navy); font-weight: 700; }
+
+  .job { margin-bottom: 11pt; page-break-inside: avoid; }
+  .job-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8pt;
+    margin-bottom: 2pt;
+  }
+  .job-title {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .job-company {
+    font-size: 10pt;
+    color: var(--red);
+    font-weight: 600;
+  }
+  .job-tag {
+    display: inline-block;
+    font-size: 7.8pt;
+    padding: 1pt 5pt;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    margin-left: 5pt;
+    border-radius: 2pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .job-date {
+    font-size: 8.8pt;
+    color: var(--muted);
+    font-style: italic;
+    white-space: nowrap;
+  }
+  .job-desc {
+    font-size: 9.2pt;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 2pt 0 5pt;
+  }
+  .job-sub {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 7pt 0 3pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .job-bullets { list-style: none; }
+  .job-bullets li {
+    font-size: 9.3pt;
+    line-height: 1.5;
+    padding-left: 12pt;
+    position: relative;
+    margin-bottom: 2.5pt;
+  }
+  .job-bullets li::before {
+    content: '';
+    position: absolute; left: 2pt; top: 6pt;
+    width: 4pt; height: 4pt;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  .job-bullets li strong { color: var(--navy); font-weight: 700; }
+
+  .proj { margin-bottom: 9pt; page-break-inside: avoid; }
+  .proj-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 3pt; gap: 8pt;
+  }
+  .proj-name {
+    font-size: 10.5pt; font-weight: 700;
+    color: var(--navy);
+  }
+  .proj-status {
+    font-size: 8pt;
+    color: var(--red);
+    font-style: italic;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .proj-desc {
+    font-size: 9.2pt; line-height: 1.5;
+    padding-left: 9pt;
+    border-left: 2.5px solid var(--navy);
+  }
+  .proj-desc strong { color: var(--navy); font-weight: 700; }
+
+  .skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4pt;
+  }
+  .skills-table tr:nth-child(odd) { background: var(--bg-soft); }
+  .skills-table td {
+    padding: 6pt 8pt;
+    font-size: 9.2pt;
+    line-height: 1.45;
+    vertical-align: top;
+  }
+  .skills-table td.label {
+    font-weight: 700;
+    color: var(--navy);
+    width: 1.5in;
+    white-space: nowrap;
+  }
+
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4pt 22pt;
+  }
+  .comp-grid div {
+    font-size: 9.3pt;
+    padding-left: 13pt;
+    position: relative;
+    line-height: 1.5;
+  }
+  .comp-grid div::before {
+    content: '◆';
+    position: absolute; left: 0; top: 0;
+    color: var(--red); font-size: 7pt;
+  }
+
+  .edu-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 3pt;
+  }
+  .edu-deg { font-size: 11pt; font-weight: 700; color: var(--navy); }
+  .edu-date { font-size: 9pt; color: var(--muted); font-style: italic; }
+  .edu-note { font-size: 9pt; line-height: 1.5; color: var(--muted); margin-top: 2pt; }
+  .edu-note strong { color: var(--navy); }
+
+  .footer-note {
+    margin-top: 14pt;
+    text-align: center;
+    font-size: 8.5pt;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--line);
+    padding-top: 8pt;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════════ COVER LETTER ═════════════════════════ -->
+<div class="page cover">
+  <div class="cover-banner">
+    <div class="cover-name">Shamar T. Patnett</div>
+    <div class="cover-role">Information Technology Manager  ·  Cover Letter</div>
+    <div class="cover-meta">
+      <span>
+        <svg width="10" height="10" viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.27-.27.35-.66.24-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+        +501-625-0795
+      </span>
+      <span>
+        <svg width="10" height="10" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Shamarpatnett2000@gmail.com
+      </span>
+      <span>
+        <svg width="10" height="10" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Belmopan, Belize
+      </span>
+    </div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-date">May 9, 2026</div>
+
+    <div class="cover-recipient">
+      <div class="recipient-name">Human Resource Manager</div>
+      <div class="recipient-line">Belize Government Lotteries Limited</div>
+      <div class="recipient-line">#11223 Hummingbird Highway, Belmopan City, Belize</div>
+    </div>
+
+    <div class="cover-greeting">Dear Human Resource Manager,</div>
+
+    <p>
+      I am writing to apply for the <strong>Information Technology Manager</strong> position at Belize Government Lotteries Limited (BGLL). With over five years of progressive IT experience — including my current role as the sole Systems Administrator and de-facto IT Manager at the Belize Social Investment Fund — I bring the technical depth, operational leadership, and entrepreneurial ownership this position requires. At BSIF I manage all aspects of organizational IT independently: hardware procurement, infrastructure, vendor contracts, cybersecurity policy, staff support, and direct consultancy on active institutional projects. I perform the full scope of an IT Manager role today, and I am ready to bring that same standard of accountability to BGLL.
+    </p>
+
+    <p>
+      In parallel, I founded <strong>M3M3 Development</strong> — a software company through which I led a small development team to build and ship a live enterprise marketplace platform on Google Cloud. Managing that team taught me technical leadership directly: sprint planning, task delegation, code review, quality assurance, and driving products from architecture through to production deployment. The platform — <strong>M3 Marketplace</strong> — comprises over 287,000 lines of Dart/Flutter code, 87 REST API endpoints, a PostgreSQL 16 backend, Redis caching, and four-provider payment integration. I have also built <strong>BeliBet</strong>, a sports betting platform with real-time event streaming, user wallet management, and secure authentication — direct industry-adjacent experience to BGLL's gambling operations.
+    </p>
+
+    <div class="cover-highlight">
+      <strong>Specific to BGLL's Fi We Boledo App:</strong> the application currently only supports DigiWallet — meaning customers cannot purchase tickets using a local Belizean debit or credit card. <strong>I have already built and shipped a Belize Bank payment integration in production</strong> as part of M3 Marketplace: hosted payment page flow, HMAC-signed webhooks, secure tokenized card storage, and transaction reconciliation. Bringing this same integration into Fi We Boledo and BGLL's backend systems would open ticket purchasing to every Belizean with a bank account — a direct and substantial increase in accessibility, transaction volume, and revenue. This is not theoretical capability; it is something I have already done.
+    </div>
+
+    <p>
+      I also identified additional security and UX opportunities. On security: a financial application handling real-money wagers should implement multi-factor authentication, biometric login (fingerprint/face ID), and sensitive data masking — currently full bank account numbers are displayed in plain text on the Payment Information screen, which is an addressable risk. On UX: the ticket purchase flow, winning numbers display, and empty-state screens have clear opportunities for stronger visual engagement, information hierarchy, and user confidence — areas where my experience shipping a 12-module customer-facing mobile app applies directly.
+    </p>
+
+    <p>
+      Regarding the Angular and Groovy requirements in the posting: I hold a B.Sc. in Computer Science from Edinburgh Napier University, where my coursework included both Angular and Groovy-based frameworks. While my professional work has been primarily in Flutter/Dart and Serverpod, my 287,000-LOC production track record demonstrates the engineering rigor required to learn and work effectively in BGLL's existing stack. I anticipate a focused four-to-six week onboarding ramp during which I will be productive on IT operations, infrastructure, and the security/payment improvements I have already scoped — while building deep familiarity with BGLL's Angular/Groovy codebase. Continuous learning is fundamental to engineering, and I am genuinely committed to it.
+    </p>
+
+    <p>
+      Enclosed is my full curriculum vitae. I would welcome an interview at your earliest convenience and can be reached at <strong>+501-625-0795</strong> or <strong>Shamarpatnett2000@gmail.com</strong>. I am genuinely motivated to serve an organization whose work funds critical national programs including the National Health Insurance and the Official Charities Fund — and I am confident I can contribute meaningfully to BGLL's IT leadership and digital growth from day one.
+    </p>
+
+    <p>Thank you for your time and consideration.</p>
+
+    <div class="cover-sign">
+      <div>Sincerely,</div>
+      <div class="sig-name">Shamar T. Patnett</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═════════════════════════ CV — PAGE 2 ═════════════════════════ -->
+<div class="page">
+  <div class="cv-header">
+    <div class="cv-name-row">
+      <div>
+        <div class="cv-name">Shamar T. Patnett</div>
+        <div class="cv-role">Information Technology Manager  ·  Curriculum Vitae</div>
+      </div>
+      <div class="cv-contacts">
+        <div>+501-625-0795  ·  Belmopan, Belize</div>
+        <div><a href="mailto:Shamarpatnett2000@gmail.com">Shamarpatnett2000@gmail.com</a></div>
+        <div>
+          <a href="https://www.linkedin.com/in/shamar-patnett-a529301b6/">linkedin.com/in/shamar-patnett</a>  ·
+          <a href="https://github.com/ShTPDev">github.com/ShTPDev</a>
+        </div>
+        <div><a href="https://m3m3development.com/">m3m3development.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-body">
+
+    <section>
+      <h2 class="sec">Professional Profile</h2>
+      <p class="profile-text">
+        IT professional and entrepreneur with 5+ years of progressive experience spanning systems administration, enterprise full-stack development, and IT operations management. Currently the sole IT administrator and de-facto IT Manager at Belize Social Investment Fund, managing all organizational IT independently — from procurement and infrastructure to vendor relations, cybersecurity, and custom system development. Founder of M3M3 Development, where I led a development team to build and ship M3 Marketplace — a live 287K-LOC enterprise marketplace platform on Google Cloud, including a production Belize Bank payment integration. Direct industry-adjacent experience via BeliBet, a sports betting platform I built end-to-end. Holds a B.Sc. in Computer Science from Edinburgh Napier University, with academic exposure to Angular and Groovy-based development frameworks.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="sec">Key Achievements</h2>
+      <ul class="achievements">
+        <li><strong>Belize Bank payment integration shipped in production</strong> on M3 Marketplace — hosted payment page, HMAC webhooks, tokenized cards, reconciliation. Same capability BGLL's Fi We Boledo app currently lacks.</li>
+        <li><strong>Sole IT authority at BSIF</strong> for 1.5+ years — executing full IT Manager responsibilities (procurement, infrastructure, vendor management, cybersecurity, project consultancy) without the formal title.</li>
+        <li><strong>Founded M3M3 Development</strong> and led a development team to deliver a production-grade enterprise marketplace platform — 287K+ LOC across mobile app, admin web, and Serverpod backend on GCP.</li>
+        <li><strong>Built BeliBet end-to-end</strong> — a sports betting platform with real-time WebSocket event streaming, user wallets, and secure auth. Direct gambling-industry development experience.</li>
+        <li><strong>Built TraySoft Payment Module:</strong> 4-provider integration with real-time fraud detection, PCI-DSS tokenization, 543 automated tests at 78% coverage (QA Grade A).</li>
+        <li><strong>Managed enterprise data pipelines at Dealer Spike</strong> for 100+ clients with near-zero error rates: SQL Server DBA, Celigo iPaaS, PowerBI reporting.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="sec">Professional Experience</h2>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Founder &amp; Lead Developer</span>
+            <span class="job-company">— M3M3 Development</span>
+            <span class="job-tag">Owner / Director</span>
+          </div>
+          <div class="job-date">2022 – Present  ·  Registered March 2025</div>
+        </div>
+        <p class="job-desc">Software development company building full-stack mobile, web, and enterprise platforms for the Belize market. Led a small team through the complete lifecycle of a production marketplace platform on Google Cloud.</p>
+
+        <div class="job-sub">Company &amp; Team Leadership</div>
+        <ul class="job-bullets">
+          <li>Established and operate M3M3 Development; manage client relationships, project scoping, team coordination, and business development as company owner.</li>
+          <li>Led the development team as technical director: sprint planning, task delegation, code review, quality assurance, and production deployment management.</li>
+          <li>Coordinated requirements, timelines, and delivery milestones with clients and stakeholders — accountable as both technical lead and business owner.</li>
+        </ul>
+
+        <div class="job-sub">Platform Development — M3 Marketplace</div>
+        <ul class="job-bullets">
+          <li><strong>Belize Bank payment integration in production:</strong> hosted payment page flow, HMAC-signed webhooks, tokenized card storage, transaction reconciliation — the exact capability BGLL's Fi We Boledo app needs to accept local debit/credit cards.</li>
+          <li>Sole architect: 3-tier system with Flutter multi-platform client, Serverpod type-safe backend, PostgreSQL 16 with pgvector (semantic search) and PostGIS (geolocation).</li>
+          <li>Scale: 87 REST API endpoints, 91 backend services, 418 data models, 744 database migrations. Distributed Redis caching, PgBouncer connection pooling (500+ concurrent), real-time WebSocket inventory streams.</li>
+          <li>Four-provider payment integration (Stripe, PayPal, Belize Bank, COD) with real-time fraud detection (risk score 0–100, velocity tracking, blocklist), PCI-DSS tokenized storage, multi-currency (BZD/USD/EUR/GBP/CAD).</li>
+          <li>Production-grade security: MFA, biometric login (fingerprint/face ID), JWT session management, 3-tier RBAC, rate limiting, complete audit logging.</li>
+          <li>18-module admin panel + 12-module customer mobile app. Deployed on Google Cloud Run + Cloud SQL + Cloud Storage + Firebase Hosting. CI/CD via Cloud Build.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Systems Administrator</span>
+            <span class="job-company">— Belize Social Investment Fund (BSIF)</span>
+            <span class="job-tag">Acting IT Manager</span>
+          </div>
+          <div class="job-date">August 2024 – Present</div>
+        </div>
+        <p class="job-desc">Government-affiliated development institution. Sole IT administrator — performing the full scope of an IT Manager role independently.</p>
+
+        <div class="job-sub">IT Management &amp; Operations</div>
+        <ul class="job-bullets">
+          <li><strong>Single IT authority</strong> for the organization: hardware procurement, software licensing, vendor negotiation, contract management, asset lifecycle.</li>
+          <li>Provide direct ICT consultancy on active BSIF institutional projects — advising on technology selection, architecture, and deployment strategy aligned with organizational objectives.</li>
+          <li>Administer all network infrastructure, servers, workstations, and peripherals; enforce IT security policies and manage user access controls organization-wide.</li>
+          <li>Liaise with external vendors and service providers, managing SLAs, escalations, and technology support relationships.</li>
+        </ul>
+
+        <div class="job-sub">Custom System Development</div>
+        <ul class="job-bullets">
+          <li>Built the SIF IT System (Serverpod + Flutter) with barcode-based ID generation, PDF reporting, FL Charts analytics dashboards, DataTable2 for large data sets, and Serverpod Streams for real-time updates.</li>
+          <li>Developed BSIF MIS desktop application (Qt 6.8 / QML) with modular page architecture and event simulation for internal management workflows.</li>
+          <li>Maintain all internally developed systems — applying updates, bug fixes, and performance improvements as operational needs evolve.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Data &amp; Integration Specialist</span>
+            <span class="job-company">— Dealer Spike (Solera Company)</span>
+          </div>
+          <div class="job-date">2022 – 2024</div>
+        </div>
+        <p class="job-desc">Global technology platform for powersports dealerships. Managed enterprise data integration, API infrastructure, and SQL Server administration across 100+ client accounts.</p>
+        <ul class="job-bullets">
+          <li>Managed end-to-end ETL pipelines connecting 100+ dealership CRM systems via SFTP and REST APIs into SQL Server data warehouses on automated nightly schedules.</li>
+          <li>Administered SQL Server: schema management, query optimization, indexing, performance tuning, and data integrity enforcement across all production systems.</li>
+          <li>Deployed and managed Celigo iPaaS API ecosystem; coordinated vendor integrations, contract management, and onboarding for new client data sources.</li>
+          <li>Built data standardization processes using PHP, Python, JavaScript, and CSVFix — automating workflows and reducing manual processing across all client accounts.</li>
+          <li>Built and maintained PowerBI dashboards tracking pipeline throughput, API error rates, and system availability KPIs for stakeholder reporting.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Systems Administrator</span>
+            <span class="job-company">— Ready Call Center (RCC)</span>
+          </div>
+          <div class="job-date">2020 – 2022</div>
+        </div>
+        <p class="job-desc">Customer service BPO company in Belmopan. On-site IT administrator with full responsibility for network infrastructure deployment and ongoing IT operations.</p>
+        <ul class="job-bullets">
+          <li>Planned and executed complete network infrastructure build-out: structured cabling, switch/router configuration, ISP integration, and full facility network from the ground up.</li>
+          <li>Designed and implemented network redundancies and failover configurations to eliminate single points of failure and ensure business continuity.</li>
+          <li>Configured all user workstations within the domain environment, applying group policies and access restrictions per management directives.</li>
+          <li>Provided L1/L2 IT support for hardware, software, printers, and peripherals — maintaining rapid resolution to minimize operational disruption.</li>
+        </ul>
+      </div>
+
+    </section>
+
+    <section>
+      <h2 class="sec">Notable Projects &amp; Systems Built</h2>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">M3 Marketplace — Enterprise E-Commerce &amp; Marketplace Platform</span>
+          <span class="proj-status">LIVE / PRODUCTION on GCP</span>
+        </div>
+        <div class="proj-desc">
+          Full-stack platform for the Belize retail market. <strong>Stack:</strong> Dart/Flutter (mobile + web + desktop), Serverpod backend, PostgreSQL 16 + pgvector + PostGIS, Redis, PgBouncer, Docker, Google Cloud Run + Cloud SQL + Cloud Storage + Firebase Hosting. <strong>Scale:</strong> 287,026 LOC, 87 REST APIs, 91 backend services, 418 data models, 744 migrations. <strong>Security:</strong> MFA, biometric auth, JWT, 3-tier RBAC, rate limiting, audit trail, PCI-DSS tokenization, real-time fraud detection (9-factor risk scoring). <strong>Features:</strong> 4-provider payments incl. Belize Bank, WebSocket inventory streams, OpenAI semantic search, FCM push, Shipday delivery, multi-currency.
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">BeliBet — Sports Betting Platform</span>
+          <span class="proj-status">DIRECTLY RELEVANT TO BGLL</span>
+        </div>
+        <div class="proj-desc">
+          Full-stack sports betting platform with Serverpod backend, Flutter mobile app, and admin web panel.
+          <strong>Built end-to-end:</strong> complete authentication (sign up / sign in / password reset with SHA256 hashing and email validation), real-time WebSocket event streaming, user wallet system (auto-created on signup), and admin event/betting management. <strong>Direct gambling/betting industry development experience</strong> — same operational and regulatory environment as BGLL.
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">SIF IT System</span>
+          <span class="proj-status">BSIF INTERNAL — PRODUCTION</span>
+        </div>
+        <div class="proj-desc">
+          Multi-platform Serverpod / Flutter system: barcode-based ID generation, PDF report printing, Serverpod Streams for real-time updates, FL Charts analytics dashboards, and DataTable2 for large data set management. Built and maintained for BSIF organizational use as part of my Systems Administrator role.
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">TraySoft Payment Module</span>
+          <span class="proj-status">PRODUCTION-READY PACKAGE</span>
+        </div>
+        <div class="proj-desc">
+          Standalone Serverpod / Flutter payment package: Stripe, PayPal, Belize Bank, and COD integration. Includes a fraud detection engine, velocity tracking, blocklist management, marketplace split payments, and multi-currency support. <strong>543 automated tests, 78% coverage (QA Grade A).</strong>
+        </div>
+      </div>
+
+      <div class="proj">
+        <div class="proj-head">
+          <span class="proj-name">BelizeHomes  ·  M3M3 Marketplace  ·  Other</span>
+          <span class="proj-status">PORTFOLIO</span>
+        </div>
+        <div class="proj-desc">
+          <strong>BelizeHomes:</strong> real estate marketplace + CRM with RBAC at the endpoint layer, Kanban pipeline (appflowy_board), Isar offline sync, Syncfusion charts, rich text editor, PDF generation, reactive forms, and Pluto Grid data tables. <strong>M3M3 Marketplace + Admin Web:</strong> live at m3m3development.com.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Education</h2>
+      <div class="edu-row">
+        <div class="edu-deg">Bachelor of Science — Computer Science</div>
+        <div class="edu-date">2019 – 2023</div>
+      </div>
+      <div class="edu-note">
+        <strong>Edinburgh Napier University (ENU)</strong> — Online Program. Coursework included <strong>Angular</strong> web frameworks, <strong>Groovy</strong> / server-side scripting, data structures, systems design, database management, and software engineering principles. Certificate of Graduation ID: 0004686.
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Technical Skills &amp; Tools</h2>
+      <table class="skills-table">
+        <tr><td class="label">Infrastructure</td><td>Network Architecture, Structured Cabling, Switch/Router Config, Redundancy Design, Active Directory, Workstation Management</td></tr>
+        <tr><td class="label">Cloud &amp; DevOps</td><td>Google Cloud Run, Cloud SQL, Cloud Storage, Firebase Hosting, Docker Compose, Redis, PgBouncer, CI/CD (Cloud Build)</td></tr>
+        <tr><td class="label">Databases</td><td>PostgreSQL 16, SQL Server, pgvector, PostGIS, Drift/SQLite, ETL Pipelines, Schema Design, Query Optimization</td></tr>
+        <tr><td class="label">Backend Development</td><td>Serverpod (Dart), REST APIs, WebSockets, PHP, Python, JavaScript, Webhook Handling</td></tr>
+        <tr><td class="label">Frontend / Mobile</td><td>Flutter (mobile + web + desktop), Dart, BLoC/Cubit, GoRouter, Material 3, Animations, Responsive UX/UI</td></tr>
+        <tr><td class="label">Integration &amp; APIs</td><td>Celigo iPaaS, Postman, SFTP, JSON/XML, Stripe, PayPal, Belize Bank, SendGrid, FCM, Shipday, OpenAI</td></tr>
+        <tr><td class="label">Security</td><td>MFA, Biometric Auth, JWT, RBAC, Rate Limiting, PCI-DSS Tokenization, Fraud Detection, Audit Logging</td></tr>
+        <tr><td class="label">IT Operations</td><td>Procurement, Vendor Management, Asset Lifecycle, SLA Management, IT Policy, L1/L2 Support</td></tr>
+        <tr><td class="label">Reporting &amp; BI</td><td>PowerBI, FL Charts, PDF Generation, KPI Dashboards, Syncfusion Charts, Data Visualization</td></tr>
+        <tr><td class="label">Desktop / Other</td><td>Qt 6.8 / QML, Tkinter (Python), Barcode Generation, iOS &amp; Android App Store Deployment</td></tr>
+        <tr><td class="label">Frameworks (Academic)</td><td>Angular, Groovy / Grails — academic exposure at ENU; actively expanding for enterprise web development</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2 class="sec">Professional Competencies</h2>
+      <div class="comp-grid">
+        <div>IT Strategy, Planning &amp; Governance</div>
+        <div>Team Leadership &amp; Staff Coordination</div>
+        <div>Systems &amp; Network Administration</div>
+        <div>Database Administration &amp; Performance</div>
+        <div>Cybersecurity &amp; Data Protection</div>
+        <div>Reporting, Analytics &amp; KPI Monitoring</div>
+        <div>IT Procurement &amp; Vendor Management</div>
+        <div>UX/UI Design &amp; Improvement</div>
+        <div>IT Project Management &amp; Delivery</div>
+        <div>Application Security Best Practices</div>
+        <div>Mobile &amp; Web Application Development</div>
+        <div>Continuous Learning &amp; Adaptability</div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</body>
+</html>
