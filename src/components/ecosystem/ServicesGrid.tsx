@@ -1,16 +1,18 @@
 /**
- * ServicesGrid — bento-grid of services on the homepage.
+ * ServicesGrid — bento-grid of services with tilt + scroll reveal.
  *
- * Demonstrates BentoCard `span` prop driving asymmetric layout:
- *  - First card spans 2 columns (wide).
- *  - Remaining cards default to 1x1.
- *
- * Server Component (data is local + static).
+ * Phase 3 layout note:
+ *   `BentoCard` MUST stay a direct child of `BentoGrid` so CSS grid spans
+ *   apply correctly. So Reveal/TiltCard wrap the *content* of each card,
+ *   not the card itself. This keeps the grid layout intact while still
+ *   getting scroll fade + 3D hover tilt.
  */
 
 import { Section } from "@/components/ui/Section";
 import { BentoCard, BentoGrid } from "@/components/ui/BentoGrid";
 import { ServiceCard } from "./ServiceCard";
+import { Reveal } from "@/components/animations/Reveal";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { SERVICES } from "@/data/services";
 
 export function ServicesGrid() {
@@ -25,10 +27,16 @@ export function ServicesGrid() {
         {SERVICES.map((service, i) => (
           <BentoCard
             key={service.title}
-            // First tile takes a wider slot to anchor the grid visually.
             span={i === 0 ? "2x1" : "1x1"}
+            className="!p-0"
           >
-            <ServiceCard service={service} />
+            <Reveal delay={i * 0.08} className="h-full">
+              <TiltCard className="h-full">
+                <div className="flex h-full flex-col p-6">
+                  <ServiceCard service={service} />
+                </div>
+              </TiltCard>
+            </Reveal>
           </BentoCard>
         ))}
       </BentoGrid>

@@ -1,20 +1,15 @@
 /**
- * Hero — top-of-homepage section with animated headline + CTA buttons.
+ * Hero — top-of-homepage section.
  *
- * Why `"use client"`?
- *   Framer Motion is a client-only library — it uses browser APIs
- *   (requestAnimationFrame, IntersectionObserver) that don't exist on the
- *   server. Adding `"use client"` at the top tells Next.js to render this
- *   component on the client. EVERY component imported by a client component
- *   is also treated as client.
+ * Phase 3 upgrades:
+ *  - HeroBackground (mouse-tracked radial gradient)
+ *  - FloatingIcons (subtle drift loop)
+ *  - AnimatedTitle (per-word stagger reveal)
+ *  - MagneticButton wrapping the primary CTA
  *
- * Animation flow:
- *   - The wrapper uses `variants={stagger}` and animates from "hidden" → "show".
- *   - Each child (badge, h1, p, button row) inherits those state names and
- *     uses `variants={fadeInUp}`, so the parent's stagger config makes them
- *     animate in one after another.
- *   - `initial="hidden" animate="show"` triggers the animation on mount
- *     (vs. `whileInView` which triggers on scroll).
+ * Why all this is in a client component:
+ *   Every effect here needs the browser — pointer events, animation timers,
+ *   bounding rects. So `"use client"` at top.
  */
 
 "use client";
@@ -22,10 +17,17 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { fadeInUp, stagger } from "@/lib/animations";
+import { HeroBackground } from "./HeroBackground";
+import { FloatingIcons } from "./FloatingIcons";
+import { AnimatedTitle } from "./AnimatedTitle";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 
 export function Hero() {
   return (
-    <section className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-6 pb-24 pt-20 sm:pt-28">
+    <section className="relative mx-auto flex w-full max-w-6xl flex-col items-center overflow-hidden px-6 pb-24 pt-20 sm:pt-28">
+      <HeroBackground />
+      <FloatingIcons />
+
       <motion.div
         variants={stagger}
         initial="hidden"
@@ -39,15 +41,11 @@ export function Hero() {
           Belize · full-stack systems · marketplace + payments
         </motion.span>
 
-        <motion.h1
-          variants={fadeInUp}
-          // `text-balance` (Tailwind v4) hints the browser to balance line
-          // wrapping for nicer headline shapes on multi-line titles.
+        <AnimatedTitle
+          text="I build scalable commerce systems for Belize."
+          highlight="commerce"
           className="max-w-3xl text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-6xl"
-        >
-          I build <span className="text-gradient">scalable commerce</span>{" "}
-          systems for Belize.
-        </motion.h1>
+        />
 
         <motion.p
           variants={fadeInUp}
@@ -59,14 +57,16 @@ export function Hero() {
 
         <motion.div
           variants={fadeInUp}
-          className="mt-8 flex flex-col gap-3 sm:flex-row"
+          className="mt-8 flex flex-col items-center gap-3 sm:flex-row"
         >
-          <Link
-            href="/projects"
-            className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90"
-          >
-            View Projects
-          </Link>
+          <MagneticButton>
+            <Link
+              href="/projects"
+              className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90"
+            >
+              View Projects
+            </Link>
+          </MagneticButton>
           <Link
             href="/contact"
             className="glass rounded-full px-6 py-3 text-sm font-medium text-foreground transition hover:bg-white/10"
