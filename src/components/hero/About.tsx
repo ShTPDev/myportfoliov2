@@ -16,16 +16,27 @@ export function About() {
     <Section
       id="about"
       eyebrow="About"
-      title="Systems engineer focused on Belize commerce."
-      description="I design, build, and operate the full stack — from mobile apps to the Linux boxes that run the backend — so businesses in Belize can run on infrastructure they own."
+      title="IT Manager and full-stack engineer based in Belize."
+      description="Five-plus years of progressive IT experience across operations, infrastructure, and software delivery — currently the sole IT authority at the Belize Social Investment Fund and founder of M3M3 Development."
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
         <Reveal direction="left" className="md:col-span-2">
+          {/*
+            Bio paragraph. Keeping it dense but readable: lead with the IT
+            Manager scope (BSIF), then the dev-team leadership (M3M3), then
+            the relevant industry experience (BeliBet → gambling) and the
+            credential. `&apos;` is the JSX-safe escape for an apostrophe.
+          */}
           <p className="text-foreground-muted">
-            My focus: payments, marketplaces, and runner logistics. I&apos;ve
-            shipped systems end-to-end — Flutter clients, Serverpod backends,
-            Postgres schemas, WireGuard meshes, and the CI that ties it
-            together.
+            Since August 2024 I&apos;ve held the full IT Manager scope at
+            BSIF — networks, endpoints, servers, vendors, and users — as the
+            organisation&apos;s sole IT authority. In parallel I founded M3M3
+            Development (registered March 2025) and led the team that shipped
+            the M3 Marketplace: 287K lines of production code, 87 REST APIs,
+            91 backend services, 418 data models, deployed on GCP with a live
+            Belize Bank payment integration. I also built BeliBet, a sports
+            betting platform — direct gambling-industry exposure. B.Sc. in
+            Computer Science from Edinburgh Napier University.
           </p>
         </Reveal>
         <div className="md:col-span-3 grid grid-cols-1 gap-3 sm:grid-cols-2">

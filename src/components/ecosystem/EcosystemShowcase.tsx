@@ -1,10 +1,14 @@
 /**
- * EcosystemShowcase — main section displaying all M3 products.
+ * EcosystemShowcase — section listing the four flagship production projects.
+ *
+ * Data-driven: pulls from `ECOSYSTEM` in `@/data/ecosystem`. Update the data
+ * file to add/remove cards — this component never needs to change.
  *
  * Layout: 2-column grid on md+, stacked on mobile. Each card uses Reveal +
  * TiltCard for scroll-in + 3D hover.
  *
- * Server component (no hooks). Children are client components.
+ * Server component (no hooks). Children include client components — Next.js
+ * stitches the boundary automatically.
  */
 
 import { Section } from "@/components/ui/Section";
@@ -17,9 +21,9 @@ export function EcosystemShowcase() {
   return (
     <Section
       id="ecosystem"
-      eyebrow="The M3 ecosystem"
-      title="Four products, one architecture."
-      description="Customer app, driver app, admin dashboard, and payment rails — built to share models, auth, and infrastructure."
+      eyebrow="Selected work"
+      title="Four production systems."
+      description="From a 287K-LOC marketplace on Google Cloud to a sports-betting platform and an internal government IT system — all shipped end-to-end."
     >
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         {ECOSYSTEM.map((entry, i) => (

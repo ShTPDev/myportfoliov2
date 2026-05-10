@@ -9,22 +9,25 @@
  */
 
 import type { Metadata, Viewport } from "next";
-import { SITE } from "./constants";
+import { SITE, SOCIALS } from "./constants";
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: SITE.title, template: `%s — ${SITE.name}` },
   description: SITE.description,
-  authors: [{ name: SITE.author }],
+  authors: [{ name: SITE.author, url: SOCIALS.linkedin }],
   keywords: [
+    "Shamar Patnett",
+    "IT Manager Belize",
     "Belize software developer",
-    "marketplace",
-    "payment integration",
-    "e-commerce Belize",
-    "mobile app development",
-    "full stack systems",
-    "Flutter",
-    "Serverpod",
+    "marketplace platform",
+    "payment integration Belize Bank",
+    "Flutter Serverpod",
+    "Systems Administrator",
+    "BSIF",
+    "M3M3 Development",
+    "BeliBet",
+    "full stack engineer Belize",
   ],
   openGraph: {
     type: "website",
@@ -32,6 +35,7 @@ export const baseMetadata: Metadata = {
     description: SITE.description,
     url: SITE.url,
     siteName: SITE.name,
+    locale: "en_BZ",
   },
   twitter: {
     card: "summary_large_image",
@@ -52,7 +56,7 @@ export const baseViewport: Viewport = {
 };
 
 /**
- * JSON-LD structured data for search engines (schema.org Person/Website).
+ * JSON-LD structured data for search engines (schema.org Person).
  * Returned as a plain object; embed via `<script type="application/ld+json">`.
  */
 export function personJsonLd() {
@@ -61,16 +65,39 @@ export function personJsonLd() {
     "@type": "Person",
     name: SITE.author,
     url: SITE.url,
-    jobTitle: "Full-stack Software Engineer",
+    image: `${SITE.url}/profile.jpg`,
+    jobTitle: SITE.role,
+    email: `mailto:${SITE.email}`,
+    telephone: SITE.phone,
     description: SITE.description,
-    address: { "@type": "PostalAddress", addressCountry: "BZ" },
+    sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.company],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Belmopan",
+      addressRegion: "Cayo",
+      addressCountry: "BZ",
+    },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Edinburgh Napier University",
+    },
+    worksFor: {
+      "@type": "Organization",
+      name: "Belize Social Investment Fund",
+    },
     knowsAbout: [
+      "IT Management",
+      "Systems Administration",
+      "Cybersecurity",
       "Flutter",
       "Serverpod",
-      "TypeScript",
-      "Next.js",
+      "Dart",
       "PostgreSQL",
-      "Payment integrations",
+      "Google Cloud Platform",
+      "Payment Integrations",
+      "Belize Bank API",
+      "SQL Server",
+      "Network Architecture",
     ],
   };
 }

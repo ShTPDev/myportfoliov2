@@ -1,7 +1,13 @@
 /**
  * Hero — top-of-homepage section.
  *
- * Phase 3 upgrades:
+ * Copy aligned to the IT Manager pitch (BGLL application, May 2026):
+ *   - 5+ yrs progressive IT
+ *   - Sole IT authority at Belize Social Investment Fund (BSIF)
+ *   - Founder of M3M3 Development; shipped M3 Marketplace (287K LOC) on GCP
+ *   - Built Belize Bank payment integration in production
+ *
+ * Phase 3 animation stack (kept intact):
  *  - HeroBackground (mouse-tracked radial gradient)
  *  - FloatingIcons (subtle drift loop)
  *  - AnimatedTitle (per-word stagger reveal)
@@ -38,12 +44,18 @@ export function Hero() {
           variants={fadeInUp}
           className="glass mb-6 rounded-full px-4 py-1.5 font-mono text-xs text-foreground-muted"
         >
-          Belize · full-stack systems · marketplace + payments
+          Belmopan, Belize · IT Manager · Full-Stack Engineer
         </motion.span>
 
+        {/*
+          AnimatedTitle splits the string by spaces and applies the gradient
+          class to any word that contains `highlight`. Picking "systems" so
+          the brand-coloured word lands on the noun the rest of the sentence
+          is anchored to.
+        */}
         <AnimatedTitle
-          text="I build scalable commerce systems for Belize."
-          highlight="commerce"
+          text="I run IT operations and ship production systems for Belize."
+          highlight="systems"
           className="max-w-3xl text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-6xl"
         />
 
@@ -51,8 +63,10 @@ export function Hero() {
           variants={fadeInUp}
           className="mt-5 max-w-xl text-balance text-base text-foreground-muted sm:text-lg"
         >
-          Marketplaces, payment gateways, runner logistics — production-grade
-          infrastructure built end-to-end.
+          5+ years of progressive IT experience. Currently the sole IT
+          authority at the Belize Social Investment Fund and founder of M3M3
+          Development — where I led the team that shipped the 287K-LOC M3
+          Marketplace on GCP, with Belize Bank payments live in production.
         </motion.p>
 
         <motion.div
@@ -64,7 +78,7 @@ export function Hero() {
               href="/projects"
               className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90"
             >
-              View Projects
+              View work
             </Link>
           </MagneticButton>
           <Link

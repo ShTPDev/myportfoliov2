@@ -1,25 +1,45 @@
 /**
- * ecosystem.ts — data for the M3 product showcase.
+ * ecosystem.ts — data for the production-projects showcase.
+ *
+ * Source of truth: Shamar T. Patnett's CV (real, shipped or in-production
+ * projects). This file lists the four flagship projects shown on the
+ * portfolio's ecosystem section.
  *
  * Concept showcase:
- *  - **Discriminated unions via `kind`** — each ecosystem entry has a `kind`
- *    literal so UI code can branch on it with full type narrowing.
+ *  - **Discriminated unions via `kind`** — each entry has a `kind` literal
+ *    so UI code can branch on it with full TS type narrowing
+ *    (e.g. `if (entry.kind === "betting") { ... }`).
+ *  - **Literal-union extensibility** — adding a new `kind` is a one-line
+ *    edit; TS will then catch any `switch` that forgot to handle it.
  *  - **Nested `readonly` arrays** — `metrics: readonly Metric[]` makes the
- *    array immutable, preventing accidental mutation.
- *  - **Importing icon components as data** — same pattern as services.ts.
+ *    array immutable, preventing accidental mutation downstream.
+ *  - **Importing icon components as data** — lucide-react icons are React
+ *    components, so we can store them in plain data and let the consumer
+ *    render them. Same pattern as services.ts.
+ *  - **`as const` on the array literal** — locks every nested string to its
+ *    literal type, so tooling (and TS) can narrow on it later.
  */
 
 import type { LucideIcon } from "lucide-react";
 import {
   ShoppingBag,
-  Truck,
-  LayoutDashboard,
+  Trophy,
   CreditCard,
+  LayoutDashboard,
 } from "lucide-react";
 
-// `Kind` is a literal-union acting as a tag. It lets a future component
-// switch on `entry.kind` and TS will narrow the type inside each branch.
-export type EcosystemKind = "marketplace" | "runner" | "admin" | "payments";
+// `EcosystemKind` is a literal-union acting as a tag. It lets a future
+// component switch on `entry.kind` and TS will narrow the type inside each
+// branch (a "discriminated union" pattern).
+//
+// Two new kinds added vs. the old placeholder set:
+//   - "betting"  : sports betting platform (BeliBet)
+//   - "internal" : internal/enterprise IT system (BSIF SIF IT System)
+export type EcosystemKind =
+  | "marketplace"
+  | "betting"
+  | "payments"
+  | "internal";
 
 export interface Metric {
   label: string;
@@ -31,74 +51,81 @@ export interface EcosystemEntry {
   title: string;
   tagline: string;
   description: string;
+  // `LucideIcon` is the type for any lucide-react icon component.
   icon: LucideIcon;
-  // Tailwind classes — the accent color theme for the card.
+  // Tailwind utility classes — the accent color theme for the card.
   accentClass: string;
-  // Tech stack chips.
+  // Tech stack chips. `readonly string[]` means callers can read but not push.
   stack: readonly string[];
   // Quick stats shown on the card.
   metrics: readonly Metric[];
 }
 
+// `as const` here freezes the array AND every string inside it to its literal
+// type. Combined with `readonly EcosystemEntry[]`, this is fully immutable.
 export const ECOSYSTEM: readonly EcosystemEntry[] = [
   {
+    // M3 Marketplace — the flagship. Real production system on GCP.
     kind: "marketplace",
     title: "M3 Marketplace",
-    tagline: "Customer-facing commerce app for Belize.",
+    tagline: "Live enterprise e-commerce on Google Cloud.",
     description:
-      "Multi-vendor mobile + web storefront. Catalog browsing, cart, checkout, order tracking. Built for low-bandwidth networks with offline-first sync.",
+      "287,026 LOC. Dart/Flutter (mobile + web + desktop), Serverpod backend, PostgreSQL 16 + pgvector + PostGIS, Redis, PgBouncer, Docker. Sole architect: 18-module admin panel + 12-module customer app.",
     icon: ShoppingBag,
     accentClass: "text-accent-cyan ring-accent-cyan/30 bg-accent-cyan/15",
-    stack: ["Flutter", "Serverpod", "Postgres"],
+    stack: ["Flutter", "Serverpod", "Postgres 16", "Redis", "GCP"],
     metrics: [
-      { label: "platforms", value: "iOS · Android · Web" },
-      { label: "vendors", value: "multi-tenant" },
-      { label: "offline", value: "first-class" },
+      { label: "LOC", value: "287K" },
+      { label: "REST APIs", value: "87" },
+      { label: "Status", value: "Production" },
     ],
   },
   {
-    kind: "runner",
-    title: "M3 Runner",
-    tagline: "Driver app + dispatch backbone.",
+    // BeliBet — directly relevant to BGLL (gambling/betting industry).
+    kind: "betting",
+    title: "BeliBet",
+    tagline: "Sports betting platform — direct gambling-industry experience.",
     description:
-      "Live order assignment, route optimization, proof-of-delivery photos, COD reconciliation. Push-driven with reliable retry queues.",
-    icon: Truck,
+      "Full-stack Serverpod + Flutter mobile + admin web. WebSocket real-time event streaming, user wallet auto-created on signup, SHA256-hashed auth, admin event/betting management. Same operational and regulatory environment as BGLL.",
+    icon: Trophy,
     accentClass: "text-accent-violet ring-accent-violet/30 bg-accent-violet/15",
-    stack: ["Flutter", "WebSockets", "WireGuard"],
+    stack: ["Serverpod", "Flutter", "WebSockets", "SHA256"],
     metrics: [
-      { label: "dispatch", value: "real-time" },
-      { label: "delivery proof", value: "photo + sig" },
-      { label: "settlement", value: "automated" },
+      { label: "Streaming", value: "Real-time" },
+      { label: "Wallet", value: "Auto-created" },
+      { label: "Industry", value: "Gambling" },
     ],
   },
   {
-    kind: "admin",
-    title: "Admin Dashboard",
-    tagline: "Operations cockpit for vendors.",
-    description:
-      "Inventory, orders, finance, analytics. Built as a Flutter web app sharing models with the mobile clients — one schema, three surfaces.",
-    icon: LayoutDashboard,
-    accentClass: "text-accent-blue ring-accent-blue/30 bg-accent-blue/15",
-    stack: ["Flutter Web", "Drift", "Charts"],
-    metrics: [
-      { label: "shared models", value: "Dart-first" },
-      { label: "reports", value: "live + scheduled" },
-      { label: "auth", value: "RBAC" },
-    ],
-  },
-  {
+    // TraySoft Payment Module — production-ready 4-provider package.
     kind: "payments",
-    title: "Payment Gateway",
-    tagline: "Local Belize rails + reconciliation.",
+    title: "TraySoft Payment Module",
+    tagline: "Production payment package — 4 providers, fraud-detection.",
     description:
-      "Integration with local processors, idempotent capture/refund flows, double-entry ledger, audit trail. Designed to survive network flakes.",
+      "Standalone Serverpod/Flutter package. Stripe + PayPal + Belize Bank + COD. Fraud engine (9-factor risk score), velocity tracking, blocklist, marketplace splits, multi-currency. 543 automated tests at 78% coverage (QA Grade A).",
     icon: CreditCard,
     accentClass: "text-accent-cyan ring-accent-cyan/30 bg-accent-cyan/15",
-    stack: ["Serverpod", "Postgres", "Stripe-style"],
+    stack: ["Stripe", "PayPal", "Belize Bank", "COD"],
     metrics: [
-      { label: "ledger", value: "double-entry" },
-      { label: "retries", value: "idempotent" },
-      { label: "audit", value: "append-only" },
+      { label: "Tests", value: "543" },
+      { label: "Coverage", value: "78%" },
+      { label: "Grade", value: "A" },
+    ],
+  },
+  {
+    // SIF IT System — internal production system at BSIF (current job).
+    kind: "internal",
+    title: "SIF IT System (BSIF)",
+    tagline: "Internal production system at Belize Social Investment Fund.",
+    description:
+      "Multi-platform Serverpod/Flutter system: barcode-based ID generation, PDF report printing, FL Charts analytics, DataTable2 large data sets, Serverpod Streams for real-time updates. Built and maintained as part of sole IT-administrator role.",
+    icon: LayoutDashboard,
+    accentClass: "text-accent-blue ring-accent-blue/30 bg-accent-blue/15",
+    stack: ["Serverpod", "Flutter", "Charts", "PDF"],
+    metrics: [
+      { label: "Status", value: "Production" },
+      { label: "Use", value: "Internal" },
+      { label: "Owner", value: "BSIF" },
     ],
   },
 ] as const;

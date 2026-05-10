@@ -19,9 +19,9 @@ export function ServicesGrid() {
   return (
     <Section
       id="services"
-      eyebrow="What I build"
-      title="From mobile apps to payment rails."
-      description="I work across the stack so the architecture stays coherent."
+      eyebrow="Core competencies"
+      title="The scope I bring to an IT Manager role."
+      description="Operations, infrastructure, full-stack delivery, and payments + security — backed by hands-on experience at BSIF and M3M3 Development."
     >
       <BentoGrid>
         {SERVICES.map((service, i) => (

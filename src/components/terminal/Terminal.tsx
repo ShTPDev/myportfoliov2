@@ -23,32 +23,36 @@ type Step =
   | { kind: "cmd"; command: string }
   | { kind: "out"; lines: readonly string[] };
 
+// Script content is IT-Manager flavored: an infra audit, a marketplace
+// health check, and a security-posture review. Each `cmd` step animates
+// (typewriter) and each `out` step renders a static block of result lines.
 const SCRIPT: readonly Step[] = [
-  { kind: "cmd", command: "load marketplace" },
+  { kind: "cmd", command: "audit infrastructure" },
   {
     kind: "out",
     lines: [
-      "✔ pulled latest catalog (2.4k SKUs)",
-      "✔ connected to payment gateway",
-      "✔ runner pool: 18 online",
+      "✔ AD: 47 users · 12 service accounts",
+      "✔ Network: redundant ISP · 99.97% uptime (90d)",
+      "✔ Endpoints: 38/38 patched · 0 critical CVEs",
     ],
   },
-  { kind: "cmd", command: "show infrastructure" },
+  { kind: "cmd", command: "show m3-marketplace" },
   {
     kind: "out",
     lines: [
-      "→ Serverpod cluster · 3 nodes · healthy",
-      "→ Postgres primary + 1 replica · lag 12ms",
-      "→ WireGuard mesh · 7 peers · all up",
+      "→ Cloud Run · 3 instances · healthy",
+      "→ Cloud SQL (PostgreSQL 16) · primary + 1 replica",
+      "→ Belize Bank gateway · 142 tx today · 0 failed",
     ],
   },
-  { kind: "cmd", command: "list technologies" },
+  { kind: "cmd", command: "review security-posture" },
   {
     kind: "out",
     lines: [
-      "Flutter · Serverpod · Dart · Postgres",
-      "Docker · WireGuard · Linux · Nginx",
-      "Next.js · TypeScript · Tailwind · Framer Motion",
+      "- MFA: enforced org-wide",
+      "- Biometric login: enabled (mobile)",
+      "- PCI-DSS tokenization: active",
+      "- Audit log: 30-day retention · streaming to BQ",
     ],
   },
 ] as const;

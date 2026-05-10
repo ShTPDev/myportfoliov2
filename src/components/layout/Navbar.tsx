@@ -19,7 +19,12 @@ export function Navbar() {
           href="/"
           className="font-mono text-sm tracking-tight text-foreground"
         >
-          <span className="text-gradient font-semibold">{SITE.name}</span>
+          {/*
+            Logo glyph uses `SITE.shortName` ("STP") — keeps the navbar tight
+            on mobile and reads as a monogram. Full name is still in the
+            page title + footer for SEO and humans.
+          */}
+          <span className="text-gradient font-semibold">{SITE.shortName}</span>
         </Link>
 
         {/* Desktop links — hidden under sm breakpoint. */}
@@ -36,11 +41,16 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/*
+            CTA copy reframed for the IT Manager pitch — this isn't a
+            freelancer "hire me" pill, it's a hiring-manager-friendly
+            "I'm reachable" signal. Style/classes unchanged.
+          */}
           <Link
             href="/contact"
             className="hidden rounded-full bg-accent-cyan/15 px-4 py-1.5 text-xs font-medium text-accent-cyan ring-1 ring-accent-cyan/30 transition hover:bg-accent-cyan/25 sm:inline-flex"
           >
-            Hire me
+            Get in touch
           </Link>
           <MobileNav />
         </div>
