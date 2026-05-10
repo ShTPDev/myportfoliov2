@@ -1,16 +1,16 @@
 /**
  * Home page (`/` route).
  *
- * In the App Router, ANY `page.tsx` file inside `src/app/` becomes a route.
- * `src/app/page.tsx` → `/`. `src/app/projects/page.tsx` → `/projects`. Etc.
+ * Section order matches the user journey:
+ *   Hero → About (who) → Ecosystem (what) → Architecture (how) → Services (offer)
  *
- * This is a Server Component (no `"use client"`). It composes client
- * components (like <Hero />, which DOES use `"use client"` because it animates).
- * Mixing server + client components is fine — Next handles the boundary.
+ * Server Component. Children mix server + client — Next handles the boundary.
  */
 
 import { Hero } from "@/components/hero/Hero";
 import { About } from "@/components/hero/About";
+import { EcosystemShowcase } from "@/components/ecosystem/EcosystemShowcase";
+import { ArchitectureDiagram } from "@/components/ecosystem/ArchitectureDiagram";
 import { ServicesGrid } from "@/components/ecosystem/ServicesGrid";
 
 export default function Home() {
@@ -18,6 +18,8 @@ export default function Home() {
     <>
       <Hero />
       <About />
+      <EcosystemShowcase />
+      <ArchitectureDiagram />
       <ServicesGrid />
     </>
   );
