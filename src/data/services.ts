@@ -49,7 +49,7 @@ export const SERVICES: readonly Service[] = [
   {
     title: "Payments & Security",
     blurb:
-      "Four-provider payment integration (incl. Belize Bank), real-time fraud detection, MFA + biometric auth, and PCI-DSS tokenization end-to-end.",
+      "Live integrations with Stripe, PayPal, and the Belize Bank payment gateway (accepts any debit or credit card from any issuer) — plus real-time fraud detection, MFA + biometric auth, and PCI-DSS tokenization end-to-end.",
     icon: ShieldCheck,
   },
 ] as const;

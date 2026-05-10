@@ -13,7 +13,7 @@ export const SITE = {
   url: "https://m3m3development.com",
   title: "Shamar T. Patnett — IT Manager · Full-Stack Engineer · Belize",
   description:
-    "IT Manager candidate, founder of M3M3 Development, sole IT authority at BSIF. Full-stack engineer who shipped a live 287K-LOC marketplace with Belize Bank payment integration in production.",
+    "IT Manager candidate, founder of M3M3 Development, sole IT authority at BSIF. Full-stack engineer who shipped a live 287K-LOC marketplace with Stripe, PayPal, and Belize Bank gateway payments in production (any card, any issuer).",
   author: "Shamar T. Patnett",
   role: "Information Technology Manager",
   location: "Belmopan, Belize",

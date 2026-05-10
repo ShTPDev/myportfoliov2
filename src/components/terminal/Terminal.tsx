@@ -42,7 +42,8 @@ const SCRIPT: readonly Step[] = [
     lines: [
       "→ Cloud Run · 3 instances · healthy",
       "→ Cloud SQL (PostgreSQL 16) · primary + 1 replica",
-      "→ Belize Bank gateway · 142 tx today · 0 failed",
+      "→ Payments · Stripe + PayPal + Belize Bank gateway · any card",
+      "→ Tx today · 142 captured · 0 failed",
     ],
   },
   { kind: "cmd", command: "review security-posture" },

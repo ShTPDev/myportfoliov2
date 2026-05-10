@@ -79,7 +79,7 @@ const COMPETENCY_EXAMPLES = [
   // 2 — Full-Stack Development
   "287K LOC shipped on M3 Marketplace — Flutter client, Serverpod backend, PostgreSQL 16 with pgvector and PostGIS, real-time WebSocket inventory.",
   // 3 — Payments & Security
-  "Belize Bank integration shipped in production on M3 Marketplace: hosted payment page, HMAC-signed webhooks, tokenized cards, transaction reconciliation.",
+  "Three live payment providers shipped on M3 Marketplace: Stripe, PayPal, and the Belize Bank gateway (any debit/credit card from any issuer) — hosted payment page, HMAC-signed webhooks, tokenized cards, transaction reconciliation.",
 ] as const;
 
 /**
@@ -92,9 +92,9 @@ const COMPETENCY_EXAMPLES = [
  */
 const DAY_ONE_DELIVERABLES = [
   {
-    headline: "Belize Bank cards in the Fi We Boledo app",
+    headline: "Local card payments in the Fi We Boledo app",
     detail:
-      "Production integration is already shipped on M3 Marketplace — hosted payment page, HMAC-signed webhooks, tokenized cards, reconciliation. Adapting the same pattern into Fi We Boledo is a 6–8 week effort, not a research project.",
+      "The Belize Bank payment gateway accepts any debit or credit card from any issuer — and I have already shipped that integration in production on M3 Marketplace (hosted payment page, HMAC-signed webhooks, tokenized cards, reconciliation). Adapting the same pattern into Fi We Boledo is a 6–8 week effort, not a research project. Stripe and PayPal are also already wired up on M3, so they are available as fallbacks if BGLL ever wants international card support.",
   },
   {
     headline: "Auth security uplift across the BGLL stack",

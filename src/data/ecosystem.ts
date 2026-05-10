@@ -70,7 +70,7 @@ export const ECOSYSTEM: readonly EcosystemEntry[] = [
     title: "M3 Marketplace",
     tagline: "Live enterprise e-commerce on Google Cloud.",
     description:
-      "287,026 LOC. Dart/Flutter (mobile + web + desktop), Serverpod backend, PostgreSQL 16 + pgvector + PostGIS, Redis, PgBouncer, Docker. Sole architect: 18-module admin panel + 12-module customer app.",
+      "287,026 LOC. Dart/Flutter (mobile + web + desktop), Serverpod backend, PostgreSQL 16 + pgvector + PostGIS, Redis, PgBouncer, Docker. Sole architect: 18-module admin panel + 12-module customer app. Live multi-provider payments: Stripe, PayPal, and the Belize Bank gateway (any card, any issuer).",
     icon: ShoppingBag,
     accentClass: "text-accent-cyan ring-accent-cyan/30 bg-accent-cyan/15",
     stack: ["Flutter", "Serverpod", "Postgres 16", "Redis", "GCP"],
@@ -102,7 +102,7 @@ export const ECOSYSTEM: readonly EcosystemEntry[] = [
     title: "TraySoft Payment Module",
     tagline: "Production payment package — 4 providers, fraud-detection.",
     description:
-      "Standalone Serverpod/Flutter package. Stripe + PayPal + Belize Bank + COD. Fraud engine (9-factor risk score), velocity tracking, blocklist, marketplace splits, multi-currency. 543 automated tests at 78% coverage (QA Grade A).",
+      "Standalone Serverpod/Flutter package. Stripe + PayPal + Belize Bank gateway (accepts any card from any issuer) + COD. Fraud engine (9-factor risk score), velocity tracking, blocklist, marketplace splits, multi-currency. 543 automated tests at 78% coverage (QA Grade A).",
     icon: CreditCard,
     accentClass: "text-accent-cyan ring-accent-cyan/30 bg-accent-cyan/15",
     stack: ["Stripe", "PayPal", "Belize Bank", "COD"],

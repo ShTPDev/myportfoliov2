@@ -63,10 +63,12 @@ export function About() {
             organisation&apos;s sole IT authority. In parallel I founded M3M3
             Development (registered March 2025) and led the team that shipped
             the M3 Marketplace: 287K lines of production code, 87 REST APIs,
-            91 backend services, 418 data models, deployed on GCP with a live
-            Belize Bank payment integration. I also built BeliBet, a sports
-            betting platform — direct gambling-industry exposure. B.Sc. in
-            Computer Science from Edinburgh Napier University.
+            91 backend services, 418 data models, deployed on GCP. Live
+            payments through three providers — Stripe, PayPal, and the
+            Belize Bank payment gateway (which accepts any debit or credit
+            card from any issuer). I also built BeliBet, a sports betting
+            platform — direct gambling-industry exposure. B.Sc. in Computer
+            Science from Edinburgh Napier University.
           </p>
           <p className="mt-3 text-xs text-foreground-muted/70">
             Hover any skill chip for context.

@@ -66,7 +66,8 @@ export function Hero() {
           5+ years of progressive IT experience. Currently the sole IT
           authority at the Belize Social Investment Fund and founder of M3M3
           Development — where I led the team that shipped the 287K-LOC M3
-          Marketplace on GCP, with Belize Bank payments live in production.
+          Marketplace on GCP, with Stripe, PayPal, and the Belize Bank
+          payment gateway (any card, any issuer) live in production.
         </motion.p>
 
         <motion.div
