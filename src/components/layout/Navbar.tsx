@@ -20,7 +20,15 @@ import { PaletteButton } from "./PaletteButton";
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full">
-      <div className="relative mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-2.5 sm:px-6">
+      {/*
+        Navbar pill bg is intentionally NEAR-OPAQUE (`bg-background/85`)
+        rather than the page-wide `glass` utility (which is ~6% white at
+        rgba). When the user scrolls, dense content (timelines, card grids,
+        bullet lists) sits behind the navbar and bleeds through 6% glass.
+        85% background + heavy blur keeps the chrome legible without
+        looking solid+flat.
+      */}
+      <div className="relative mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/85 px-5 py-2.5 backdrop-blur-xl sm:px-6">
         {/*
           Logo wrapper — `group` enables `group-hover:` on the children so
           we can light up the gradient text without putting the hover

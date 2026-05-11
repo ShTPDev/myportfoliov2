@@ -18,7 +18,7 @@ export const SITE = {
   author: "Shamar T. Patnett",
   role: "IT Manager · Software Engineer",
   location: "Belmopan, Belize",
-  email: "Shamarpatnett2000@gmail.com",
+  email: "shamarp.dev@gmail.com",
   phone: "+501-625-0795",
 } as const;
 

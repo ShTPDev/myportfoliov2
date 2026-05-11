@@ -255,6 +255,8 @@ export const ECOSYSTEM: readonly EcosystemEntry[] = [
     team: "Lead + small team",
     links: [
       { label: "m3m3development.com", href: "https://m3m3development.com", kind: "live" },
+      { label: "shop.m3m3development.com", href: "https://shop.m3m3development.com/", kind: "live" },
+      { label: "admin.m3m3development.com", href: "https://admin.m3m3development.com/", kind: "live" },
       // Placeholder — owner uploads later. Kept as a `doc` link so the chip
       // strip already shows the case-study download affordance to viewers.
       { label: "Case study (PDF)", href: "/projects/m3-marketplace/case-study.pdf", kind: "doc" },

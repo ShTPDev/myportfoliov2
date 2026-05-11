@@ -130,7 +130,7 @@ export function AboutSectionNav(): React.JSX.Element {
       aria-label="About page sections"
       className="sticky top-20 z-30 mx-auto w-full max-w-6xl px-6 pt-4"
     >
-      <div className="glass flex flex-wrap items-center gap-1.5 rounded-full px-2 py-1.5">
+      <div className="flex flex-wrap items-center gap-1.5 rounded-full border border-white/10 bg-background/85 px-2 py-1.5 backdrop-blur-xl">
         {SECTION_IDS.map((id) => {
           const isActive = active === id;
           return (

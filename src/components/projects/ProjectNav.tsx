@@ -180,7 +180,7 @@ export function ProjectNav({ items }: ProjectNavProps): React.JSX.Element {
     // when content scrolls under it.
     <nav
       aria-label="Projects table of contents"
-      className="sticky top-16 z-30 -mx-6 mb-10 border-b border-white/5 bg-background/70 px-6 py-3 backdrop-blur-md"
+      className="sticky top-16 z-30 -mx-6 mb-10 border-b border-white/10 bg-background/85 px-6 py-3 backdrop-blur-xl"
     >
       <div
         ref={stripRef}
